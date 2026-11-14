@@ -761,6 +761,8 @@ def main() -> int:
                         help="auto（默认）、markitdown 或 native")
     parser.add_argument("--list-formats", action="store_true",
                         help="列出支持的格式与后端可用性")
+    parser.add_argument("--summary", action="store_true",
+                        help="JSON 模式省略逐单元明细，降低输出体积")
     parser.add_argument("--json", action="store_true",
                         help="输出机器可读的 JSON（stdout 只有 JSON）")
     args = parser.parse_args()
@@ -827,8 +829,9 @@ def main() -> int:
         "files": len(rows),
         "total_words": total_words,
         "warnings": result["warnings"],
-        "units": rows,
     }
+    if not args.summary:
+        payload["units"] = rows
     if args.json:
         print(json.dumps(payload, ensure_ascii=False, indent=2))
         return 0

@@ -6,6 +6,16 @@
   "properties": {
     "ok": {"type": "boolean"},
     "exit_code": {"type": "integer", "enum": [0, 1]},
+    "issue_page": {
+      "type": "object",
+      "description": "issues 可能被 --max-issues/--offset 分页；total 是完整数量。",
+      "properties": {
+        "total": {"type": "integer"},
+        "offset": {"type": "integer"},
+        "returned": {"type": "integer"},
+        "has_more": {"type": "boolean"}
+      }
+    },
     "project": {
       "type": "object",
       "required": ["title", "path"],

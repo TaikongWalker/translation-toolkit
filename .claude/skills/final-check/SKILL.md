@@ -8,10 +8,18 @@ description: 全书终检：清零 TODO 与阻断错误，核对结构、术语�
 ## 自动检查
 
 ```powershell
-python ..\..\scripts\status.py --project . --json
-python ..\..\scripts\check.py --project . --json
-python ..\..\scripts\global_check.py --project . --json
+python ..\..\scripts\status.py --project . --json --summary
+python ..\..\scripts\global_check.py --project . --json --summary
 ```
+
+逐章检查时不要一次拉全书明细：
+
+```powershell
+python ..\..\scripts\check.py --project . --unit ch01 --json --compact
+python ..\..\scripts\check.py --project . --unit ch01 --json --max-issues 20 --offset 0
+```
+
+看 `issue_page.has_more` 继续翻页；`status.py --deep` 只在需要完整明细时使用。
 
 通过标准：
 

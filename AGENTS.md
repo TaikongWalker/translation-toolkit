@@ -32,11 +32,25 @@ python scripts/status.py --project projects/my-book --json
 | `backmatter.py --project <p> --json` | 生成参考文献/索引 | `generated[]` `bibliography` `index` |
 | `term_candidates.py --project <p> --json` | 提取术语候选 | `candidate_count` `candidates[]` |
 | `style.py --list\|--show\|--apply --json` | 思维阁文风档位 | `profiles[]` / `profile` / `style_id` |
+| `chunk.py --project <p> --unit <u> --out <d> --json` | 把长章切成无损块 | `chunks[]` `source_sha256` `lossless` |
 | `extract.py --input <f> --out <p>/source --json` | 多格式原文抽取 | `format` `backend` `files` `units[]` `warnings[]` |
 | `extract.py --list-formats --json` | 后端可用性 | `engines` `formats[]` |
 | `build.ps1 -Project <p> -Json` | 构建 PDF | `ok` `pdf` `pages` `check{ok,error,warn,info}` |
 
 退出码：`0` 成功/无阻断；`1` 有阻断项、参数错误或文件不可读。不要把警告当成功，也不要把提示当错误。
+
+## 容量控制
+
+长章节或长书容易撞上上下文上限。默认输出已尽量收紧；仍不够时按以下顺序降载：
+
+1. **状态**：`status.py --json --summary`（约 1–2 KB）；需要细节时再 `--deep`。
+2. **检查单章**：`check.py --unit ch03 --json`。
+3. **分页取问题**：`check.py --unit ch03 --json --max-issues 20 --offset 0 --compact`，看 `issue_page.has_more` 继续翻页。
+4. **结构汇总**：`global_check.py --json --summary`；单章用 `--unit`。
+5. **翻译长章**：先 `chunk.py --project . --unit ch03 --out chunks/ch03`，按 `c001.md`…逐块翻译，再按 `plan.json` 顺序合并。块只在段落边界切，`lossless=true` 表示拼回与原文逐字一致。
+6. **抽取大书**：`extract.py ... --summary` 省略 `units` 明细。
+
+不要用“摘要原文再翻译”的方式降载——那会损失信息。降载只应减少**输出**和**单次输入**，不减少原文。
 
 ## 原文格式
 

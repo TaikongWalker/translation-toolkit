@@ -132,11 +132,15 @@ def chapter_pairs(project: Path) -> list[tuple[str, Path, Path | None]]:
 # ----------------------------------------------------------------------
 class Checker:
     def __init__(self, project: Path, summary: bool, max_details: int,
-                 json_mode: bool = False):
+                 json_mode: bool = False, compact: bool = False,
+                 issue_offset: int = 0, issue_limit: int = 0):
         self.project = project
         self.summary = summary
         self.max_details = max_details
         self.json_mode = json_mode
+        self.compact = compact
+        self.issue_offset = issue_offset
+        self.issue_limit = issue_limit
         self.issues: list[tuple[str, str, str, str]] = []  # code, severity, where, message
         self.counts = {code: 0 for code in SEVERITY}
         self.meta: dict = {}
@@ -279,6 +283,15 @@ class Checker:
 
         exit_code = 1 if by_sev[ERROR] else 0
         if self.json_mode:
+            total = len(self.issues)
+            start = max(0, self.issue_offset)
+            end = start + self.issue_limit if self.issue_limit else total
+            selected = self.issues[start:end]
+            if self.compact:
+                selected = [
+                    (code, severity, where, message[:160])
+                    for code, severity, where, message in selected
+                ]
             payload = {
                 "project": {
                     "title": self.meta.get("title", self.project.name),
@@ -295,8 +308,14 @@ class Checker:
                 "issues": [
                     {"code": code, "severity": severity,
                      "where": where, "message": message}
-                    for code, severity, where, message in self.issues
+                    for code, severity, where, message in selected
                 ],
+                "issue_page": {
+                    "total": total,
+                    "offset": start,
+                    "returned": len(selected),
+                    "has_more": start + len(selected) < total,
+                },
                 "ok": exit_code == 0,
                 "exit_code": exit_code,
             }
@@ -336,6 +355,14 @@ def main() -> int:
                         help="每类最多显示条数（0 = 全部）")
     parser.add_argument("--json", action="store_true",
                         help="输出机器可读的 JSON（stdout 只有 JSON）")
+    parser.add_argument("--unit", default="",
+                        help="只检查一个单元（如 ch03、conclusion）")
+    parser.add_argument("--max-issues", type=int, default=0,
+                        help="JSON 模式最多返回多少条 issues（0 = 全部）")
+    parser.add_argument("--offset", type=int, default=0,
+                        help="JSON 模式 issues 的起始偏移")
+    parser.add_argument("--compact", action="store_true",
+                        help="JSON 模式截断每条 message 到 160 字，降低输出体积")
     args = parser.parse_args()
 
     project = Path(args.project).resolve()
@@ -365,7 +392,8 @@ def main() -> int:
         print("-" * 60)
 
     checker = Checker(project, args.summary, args.max_details,
-                      json_mode=args.json)
+                      json_mode=args.json, compact=args.compact,
+                      issue_offset=args.offset, issue_limit=args.max_issues)
     checker.meta = meta
     terms = load_terms(project / "glossary" / "terms.csv")
     checker.term_count = len(terms)
@@ -374,7 +402,11 @@ def main() -> int:
     checker.check_glossary(terms)
 
     pairs = chapter_pairs(project)
-    if not pairs and not args.json:
+    if args.unit:
+        pairs = [p for p in pairs if p[0] == args.unit]
+        if not pairs and not args.json:
+            print(f"[提示] 没有找到单元 {args.unit}")
+    if not pairs and not args.json and not args.unit:
         print("[提示] 未找到 source/*.md 与 chapters/*.tex 的对应关系，跳过章节检查。")
     for stem, src, tex in pairs:
         if tex is None:

@@ -12,6 +12,11 @@ description: 初译一个章节：对照 source/<stem>.md，产出 chapters/<ste
 1. 读 `notes/context.md` 对应章摘要、`notes/style.md`、`notes/style.selected.md`（若存在）、`glossary/terms.csv`。
 2. 读 `check.py --project . --json` 的当前结果，确认此前没有遗留错误。
 3. 确认目标章状态：`notes/progress.csv` 中为“未开始”或“初译”。
+4. 若原文超过约 6000 字符，先切块再翻译：
+   ```powershell
+   python ..\..\scripts\chunk.py --project . --unit <stem> --out chunks/<stem> --json
+   ```
+   按 `c001.md`…逐块翻译，块间共享术语表与相邻段落，不摘要原文；最后按 `plan.json` 顺序合并为 `chapters/<stem>.tex`。
 
 ## 翻译
 

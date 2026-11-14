@@ -1,22 +1,47 @@
 {
   "name": "translation-toolkit",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Agent-facing contract for the translation toolkit. Human docs live in docs/; this file is the machine-readable index.",
   "entrypoints": {
     "status": {
       "command": "python scripts/status.py --project <project> --json",
-      "purpose": "One-call project status: units, terms, TODOs, check and global results, blocking items.",
+      "purpose": "One-call project status: units, terms, TODOs, check and global summaries, blocking items.",
+      "options": {
+        "--summary": "omit units and chapter file lists",
+        "--deep": "include full check issues and per-unit global details",
+        "--no-check": "skip check.py/global_check.py"
+      },
       "reads": ["project.json", "notes/progress.csv", "glossary/terms.csv", "chapters/*.tex"],
       "schema": "agent/schemas/status.schema.json"
     },
     "check": {
       "command": "python scripts/check.py --project <project> --json",
       "purpose": "Project-level QA: terminology, punctuation, footnote/figure counts, untranslated runs.",
+      "options": {
+        "--unit": "check one unit (e.g. ch03)",
+        "--max-issues": "page issues (0 = all)",
+        "--offset": "issue page offset",
+        "--compact": "truncate each message to 160 chars"
+      },
       "schema": "agent/schemas/check-report.schema.json"
+    },
+    "chunk": {
+      "command": "python scripts/chunk.py --project <project> --unit <unit> --out <dir> --json",
+      "purpose": "Split one unit into lossless, paragraph-aligned chunks for bounded context.",
+      "options": {
+        "--max-chars": "target chunk size (default 6000)",
+        "--min-chars": "merge shorter chunks (default 800)",
+        "--include-text": "include chunk text in JSON (large)"
+      },
+      "writes": ["<out>/*.md", "<out>/plan.json"]
     },
     "global_check": {
       "command": "python scripts/global_check.py --project <project> --json",
       "purpose": "Whole-book structural comparison between source/*.md and chapters/*.tex.",
+      "options": {
+        "--summary": "omit per-unit details",
+        "--unit": "check one unit"
+      },
       "schema": "agent/schemas/global-check.schema.json"
     },
     "prepare": {

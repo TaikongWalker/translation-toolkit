@@ -19,6 +19,7 @@
         "publisher": {"type": "string"}
       }
     },
+    "unit_count": {"type": "integer", "minimum": 0},
     "units": {
       "type": "array",
       "items": {
@@ -46,7 +47,7 @@
     },
     "chapters": {
       "type": "object",
-      "required": ["count", "todos", "files"],
+      "required": ["count", "todos"],
       "properties": {
         "count": {"type": "integer", "minimum": 0},
         "todos": {"type": "integer", "minimum": 0},

@@ -57,6 +57,22 @@ python scripts/status.py --project projects/my-book --json
 
 返回项目阶段、术语统计、章节 TODO、`check.py` 与 `global_check.py` 的完整结果，以及阻断项列表。
 
+### 容量控制
+
+长章节或长书容易撞上下文上限。工具默认输出已尽量收紧，仍不够时：
+
+```powershell
+python scripts/status.py --project . --json --summary          # 约 1–2 KB
+python scripts/check.py --project . --unit ch03 --json         # 只查一章
+python scripts/check.py --project . --unit ch03 --json `
+  --max-issues 20 --offset 0 --compact                         # 分页取问题
+python scripts/global_check.py --project . --json --summary    # 只看结构汇总
+python scripts/chunk.py --project . --unit ch03 --out chunks/ch03 --json
+```
+
+- `chunk.py` 只在段落边界切分，不拆句子与脚注；`lossless=true` 表示按 `plan.json` 拼回与原文逐字一致。
+- 降载只减少输出或单次输入，不摘要、不删减原文。
+
 ## 思维阁：选择译者文风
 
 ```powershell
@@ -116,6 +132,7 @@ translation-toolkit/
 │  ├─ build.ps1              一键构建（-Json 输出单行 JSON）
 │  ├─ status.py              项目总状态（agent 首选入口）
 │  ├─ style.py               思维阁档位管理
+│  ├─ chunk.py               长章无损分块
 │  ├─ extract.py             统一原文抽取（多格式）
 │  ├─ epub_extract.py        EPUB 抽取后端
 │  ├─ scaffold.py            生成逐章 LaTeX 骨架

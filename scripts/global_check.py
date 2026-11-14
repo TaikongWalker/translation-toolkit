@@ -69,6 +69,10 @@ def main() -> int:
     parser.add_argument("--project", default=".")
     parser.add_argument("--json", action="store_true",
                         help="输出机器可读的 JSON（stdout 只有 JSON）")
+    parser.add_argument("--summary", action="store_true",
+                        help="省略逐章明细，只输出汇总")
+    parser.add_argument("--unit", default="",
+                        help="只核对一个单元（如 ch03、conclusion）")
     args = parser.parse_args()
     project = Path(args.project).resolve()
     source_dir = project / "source"
@@ -82,6 +86,8 @@ def main() -> int:
         if md.name.lower() == "readme.md":
             continue
         stem = md.stem
+        if args.unit and stem != args.unit:
+            continue
         if stem == "conclusion":
             target = chapters_dir / "conclusion.tex"
         elif re.fullmatch(r"ch\d+", stem):
@@ -141,13 +147,22 @@ def main() -> int:
     exit_code = 1 if errors else 0
 
     if args.json:
-        print(json.dumps({
+        payload = {
             "ok": exit_code == 0,
             "exit_code": exit_code,
             "total_chars": total_chars,
             "problem_units": errors,
-            "units": units,
-        }, ensure_ascii=False, indent=2))
+            "unit_count": len(units),
+            "summarized": args.summary,
+        }
+        if not args.summary:
+            payload["units"] = units
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+        return exit_code
+
+    if args.summary:
+        print(f"全书整体核对：{len(units)} 个单元，{total_chars:,} 字，"
+              f"问题章节 {errors} 个")
         return exit_code
 
     headers = ["章", "中文字数", "节（原→译）", "脚注（原→译）",

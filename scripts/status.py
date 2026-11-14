@@ -88,7 +88,8 @@ def run_json(script: str, project: Path) -> dict | None:
                 "stderr": proc.stderr[-2000:]}
 
 
-def build_status(project: Path, run_checks: bool = True) -> dict:
+def build_status(project: Path, run_checks: bool = True,
+                 deep: bool = False, summary: bool = False) -> dict:
     meta = read_json(project / "project.json", {})
     if not meta:
         return {"ok": False, "exit_code": 1,
@@ -118,6 +119,17 @@ def build_status(project: Path, run_checks: bool = True) -> dict:
             blocking.append(f"{unit.get('unit')} 尚未完成审校")
 
     exit_code = 1 if blocking else 0
+    check_out = check
+    if check_out and not deep:
+        check_out = {k: v for k, v in check_out.items() if k != "issues"}
+        check_out["detail"] = "summary"
+    global_out = global_result
+    if global_out and not deep:
+        global_out = {k: v for k, v in global_out.items() if k != "units"}
+        global_out["detail"] = "summary"
+    chapters_payload = {"count": len(chapters), "todos": todos}
+    if not summary:
+        chapters_payload["files"] = chapters
     return {
         "ok": exit_code == 0,
         "exit_code": exit_code,
@@ -131,12 +143,13 @@ def build_status(project: Path, run_checks: bool = True) -> dict:
             "rights": meta.get("rights", ""),
             "publisher": meta.get("publisher", ""),
         },
-        "units": units,
+        "unit_count": len(units),
+        "units": [] if summary else units,
         "terms": terms,
-        "chapters": {"count": len(chapters), "todos": todos, "files": chapters},
+        "chapters": chapters_payload,
         "blocking": blocking,
-        "check": check,
-        "global": global_result,
+        "check": check_out,
+        "global": global_out,
     }
 
 
@@ -177,10 +190,15 @@ def main() -> int:
                         help="输出机器可读的 JSON（stdout 只有 JSON）")
     parser.add_argument("--no-check", action="store_true",
                         help="跳过 check.py / global_check.py，只读静态信息")
+    parser.add_argument("--deep", action="store_true",
+                        help="连同 check 的 issues 与 global 的逐章明细一起输出（体积较大）")
+    parser.add_argument("--summary", action="store_true",
+                        help="省略 units 与 chapters.files，仅保留计数与阻断项")
     args = parser.parse_args()
 
     status = build_status(Path(args.project).resolve(),
-                          run_checks=not args.no_check)
+                          run_checks=not args.no_check,
+                          deep=args.deep, summary=args.summary)
     if args.json:
         print(json.dumps(status, ensure_ascii=False, indent=2))
     else:
