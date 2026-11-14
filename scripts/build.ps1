@@ -190,6 +190,14 @@ if (Test-Path -LiteralPath $logPath) {
 }
 Say "[OK] PDF: $pdfTarget ($pages pages)" "Green"
 
+$productDir = Join-Path (Join-Path $workspace "成品") $slug
+if (-not (Test-Path -LiteralPath $productDir)) {
+    New-Item -ItemType Directory -Path $productDir | Out-Null
+}
+$productPdf = Join-Path $productDir ("{0}.pdf" -f $slug)
+Copy-Item -LiteralPath $pdfSource -Destination $productPdf -Force
+Say "[OK] product: $productPdf" "Green"
+
 $checkResult = $null
 $checkCode = 0
 if (-not $NoCheck) {

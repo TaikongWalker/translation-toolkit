@@ -385,9 +385,15 @@ def main() -> int:
     combined_path = build_dir / "book.tex"
     combined_path.write_text(combined, encoding="utf-8")
 
-    out_dir = Path(args.out_dir).resolve() if args.out_dir else project / "dist"
-    out_dir.mkdir(parents=True, exist_ok=True)
     slug = meta_raw.get("slug", project.name)
+    if args.out_dir:
+        out_dir = Path(args.out_dir).resolve()
+    elif project.parent.name == "projects":
+        # 工作区结构：<workspace>/projects/<slug> → <workspace>/成品/<slug>
+        out_dir = project.parent.parent / "成品" / slug
+    else:
+        out_dir = project / "dist"
+    out_dir.mkdir(parents=True, exist_ok=True)
     resource = os.pathsep.join([
         str(project), str(project / "figures"), str(project / "source" / "images"),
         str(build_dir),

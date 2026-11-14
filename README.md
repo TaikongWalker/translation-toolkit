@@ -174,7 +174,7 @@ cd projects\my-book
 ..\..\scripts\build.ps1 -Clean -Open
 ```
 
-产物在 `projects/<slug>/dist/<slug>.pdf`。
+产物在 `projects/<slug>/dist/<slug>.pdf`，同时复制一份到工作区根目录的 **`成品/<slug>/`**，便于直接查找。
 
 ## 输出格式
 
@@ -190,7 +190,7 @@ python scripts/export.py --check            # 检查 Pandoc 是否可用
 ```
 
 - 安装 Pandoc：`winget install JohnMacFarlane.Pandoc`
-- 输出到 `dist/<slug>.<ext>`；图片在 EPUB/DOCX 中嵌入，HTML 使用 `--embed-resources`
+- 输出到 **`成品/<slug>/<slug>.<ext>`**（未使用 `projects/` 结构时退回 `dist/`）；图片在 EPUB/DOCX 中嵌入，HTML 使用 `--embed-resources`
 - TikZ 图会先用 XeLaTeX 编译为 PNG 再嵌入；需要 `xelatex` 与 PyMuPDF（`pip install pymupdf`）
 - 章节自动编号为“第一章 …”，脚注、译者注、图注、引文保留
 - 版式会简化：复杂表格、索引双栏、精确分页只在 PDF 中保留

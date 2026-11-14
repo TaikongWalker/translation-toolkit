@@ -1,6 +1,6 @@
 {
   "name": "translation-toolkit",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "description": "Agent-facing contract for the translation toolkit. Human docs live in docs/; this file is the machine-readable index.",
   "entrypoints": {
     "status": {

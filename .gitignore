@@ -46,3 +46,6 @@ _terms_*.txt
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# 成品输出（便于查找，不纳入版本库）
+成品/
