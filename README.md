@@ -80,6 +80,7 @@ python scripts/chunk.py --project . --unit ch03 --out chunks/ch03 --json
 
 ```powershell
 python scripts/audit.py inventory --project .                 # 建立段落配对清单
+python scripts/audit.py verify --project . --json             # 校验对照文件是否过时
 python scripts/audit.py plan --project . --size 20 --seed 42 --round 1 --json
 python scripts/audit.py record --project . --id ch03:p012 --result omission --note "漏了第二句"
 python scripts/audit.py stats --project . --json               # 覆盖率、错误率、95% 区间
@@ -91,6 +92,7 @@ python scripts/audit.py report --project .                     # notes/audit/rep
 - `stats` 给出 Wilson 95% 区间与估计残余错误数；最近 N 轮无新增错误且覆盖率达标时才建议停止。
 - 抽样记录与发现写在 `notes/audit/`，固定 `--seed` 可复现。
 - 要独立重复实验而非扩大覆盖，可用 `--with-replacement`。
+- `verify` 会检查 `notes/_<unit>_pairs.md` 是否仍与当前 `chapters/*.tex` 一致：内容相近则按正文刷新 target，无法匹配的标记为 stale 并在抽样中排除。对照文件是快照，正文润色后应先跑这一步。
 
 ### 抽多少段才够
 

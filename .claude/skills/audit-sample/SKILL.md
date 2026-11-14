@@ -7,13 +7,17 @@ description: 随机抽样复核：按段落配对分层抽样、记录漏译/误
 
 适用时机：`check.py` 与 `global_check.py` 已通过，但担心语义层面的漏译、误译、数字或术语错误。不要用抽样替代全量结构检查。
 
-## 1. 建清单
+## 1. 建清单并校验对照文件
 
 ```powershell
+python ..\..\scripts\audit.py verify --project . --json
 python ..\..\scripts\audit.py inventory --project . --json
 ```
 
-检查每个单元 `aligned` 是否为 `true`。若为 `false`，先看 `source_paragraphs` 与 `target_paragraphs` 的差异，必要时在 `notes/decisions.md` 记录段落合并/拆分。
+- `verify` 检查 `notes/_<unit>_pairs.md` 是否仍与当前 `chapters/*.tex` 一致。
+- 内容相近的 target 会按正文刷新；无法匹配的标记为 `target_stale`，不进入抽样。
+- 正文润色后必须先跑 `verify`，否则旧快照会产生误报。
+- 检查每个单元 `aligned` 是否为 `true`。若为 `false`，先看 `source_paragraphs` 与 `target_paragraphs` 的差异，必要时在 `notes/decisions.md` 记录段落合并/拆分。
 
 ## 2. 抽样
 

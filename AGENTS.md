@@ -62,10 +62,13 @@ python scripts/status.py --project projects/my-book --json
 
 ```powershell
 python scripts/audit.py inventory --project . --json
+python scripts/audit.py verify --project . --json
 python scripts/audit.py plan --project . --size 20 --seed 42 --round 1 --json
 python scripts/audit.py record --project . --id ch03:p012 --result omission --note "漏了第二句"
 python scripts/audit.py stats --project . --json
 ```
+
+- `verify` 先检查 `_pairs.md` 是否与当前正文一致；相近的 target 按正文刷新，无法匹配的标为 stale 并从抽样中排除。正文润色后必须先跑它。
 
 - `plan` 默认不重复抽样；多轮推进覆盖率，`--with-replacement` 用于独立重复实验。
 - 每个 task 带 `auto_flags`（数字缺失、占位、英文残留、术语缺失、译文缺失），先处理标记项。

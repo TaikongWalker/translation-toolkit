@@ -1,6 +1,6 @@
 {
   "name": "translation-toolkit",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Agent-facing contract for the translation toolkit. Human docs live in docs/; this file is the machine-readable index.",
   "entrypoints": {
     "status": {
@@ -11,7 +11,12 @@
         "--deep": "include full check issues and per-unit global details",
         "--no-check": "skip check.py/global_check.py"
       },
-      "reads": ["project.json", "notes/progress.csv", "glossary/terms.csv", "chapters/*.tex"],
+      "reads": [
+        "project.json",
+        "notes/progress.csv",
+        "glossary/terms.csv",
+        "chapters/*.tex"
+      ],
       "schema": "agent/schemas/status.schema.json"
     },
     "check": {
@@ -33,18 +38,26 @@
         "--min-chars": "merge shorter chunks (default 800)",
         "--include-text": "include chunk text in JSON (large)"
       },
-      "writes": ["<out>/*.md", "<out>/plan.json"]
+      "writes": [
+        "<out>/*.md",
+        "<out>/plan.json"
+      ]
     },
     "audit": {
       "command": "python scripts/audit.py <inventory|plan|record|stats|report> --project <project>",
       "purpose": "Reproducible random sampling QA: paragraph pairs, stratified rounds, Wilson interval, stop recommendation.",
       "options": {
+        "verify": "check _pairs.md against current chapters; refresh near matches, mark stale",
         "plan": "--size N --seed S --round R [--unit U] [--with-replacement]",
         "record": "--id <unit:pNNN> --result ok|omission|mistranslation|terminology|number|footnote|style|other --note TEXT",
         "stats": "--min-coverage 0.1 --quiet-rounds 3"
       },
-      "writes": ["notes/audit/segments.json", "notes/audit/sample-log.csv",
-                 "notes/audit/findings.csv", "notes/audit/report.md"]
+      "writes": [
+        "notes/audit/segments.json",
+        "notes/audit/sample-log.csv",
+        "notes/audit/findings.csv",
+        "notes/audit/report.md"
+      ]
     },
     "sample_size": {
       "command": "python scripts/sample_size.py --project <project> --margin 0.01 --confidence 0.95 --json",
@@ -65,13 +78,24 @@
         "--mode structural": "automated checks only",
         "--save": "persist qa_mode in project.json"
       },
-      "writes": ["notes/qa/*", "notes/audit/*", "project.json:qa_mode"]
+      "writes": [
+        "notes/qa/*",
+        "notes/audit/*",
+        "project.json:qa_mode"
+      ]
     },
     "export": {
       "command": "python scripts/export.py --project <project> --format all --json",
       "purpose": "Export the LaTeX book to Markdown, HTML, EPUB and DOCX via Pandoc.",
-      "formats": ["md", "html", "epub", "docx"],
-      "requires": ["pandoc (winget install JohnMacFarlane.Pandoc)"],
+      "formats": [
+        "md",
+        "html",
+        "epub",
+        "docx"
+      ],
+      "requires": [
+        "pandoc (winget install JohnMacFarlane.Pandoc)"
+      ],
       "note": "PDF remains the XeLaTeX build; other formats simplify layout."
     },
     "global_check": {
@@ -86,17 +110,25 @@
     "prepare": {
       "command": "python scripts/prepare.py --project <project> --json",
       "purpose": "Generate meta.tex, chapters.tex and glossary.tex.",
-      "reads": ["project.json", "glossary/terms.csv", "chapters/*.tex"]
+      "reads": [
+        "project.json",
+        "glossary/terms.csv",
+        "chapters/*.tex"
+      ]
     },
     "backmatter": {
       "command": "python scripts/backmatter.py --project <project> --json",
       "purpose": "Convert source/backmatter/{bibliography,index}.md into LaTeX.",
-      "reads": ["source/backmatter/*.md"]
+      "reads": [
+        "source/backmatter/*.md"
+      ]
     },
     "term_candidates": {
       "command": "python scripts/term_candidates.py --project <project> --json",
       "purpose": "Extract term candidates from source/*.md.",
-      "reads": ["source/*.md"]
+      "reads": [
+        "source/*.md"
+      ]
     },
     "extract": {
       "command": "python scripts/extract.py --input <file> --out <project>/source --json",
@@ -107,19 +139,34 @@
         "native": "force built-in extractors"
       },
       "list_formats": "python scripts/extract.py --list-formats --json",
-      "writes": ["source/*.md", "source/frontmatter/*.md", "source/manifest.csv"]
+      "writes": [
+        "source/*.md",
+        "source/frontmatter/*.md",
+        "source/manifest.csv"
+      ]
     },
     "style": {
       "command": "python scripts/style.py --list|--show <id>|--apply <id> --project <project> --json",
       "purpose": "思维阁: list, inspect or apply a translator style profile.",
-      "reads": ["styles/index.json", "styles/<id>/profile.json", "styles/<id>/STYLE.md"],
-      "writes": ["notes/style.selected.md", "project.json:style_id"]
+      "reads": [
+        "styles/index.json",
+        "styles/<id>/profile.json",
+        "styles/<id>/STYLE.md"
+      ],
+      "writes": [
+        "notes/style.selected.md",
+        "project.json:style_id"
+      ]
     },
     "build": {
       "command": "pwsh scripts/build.ps1 -Project <project> -Json",
       "or": "powershell -File scripts/build.ps1 -Project <project> -Json",
       "purpose": "Generate, compile with XeLaTeX, copy PDF, run check; stdout is one JSON line.",
-      "writes": ["generated/*", "build/*", "dist/*.pdf"]
+      "writes": [
+        "generated/*",
+        "build/*",
+        "dist/*.pdf"
+      ]
     }
   },
   "exit_codes": {

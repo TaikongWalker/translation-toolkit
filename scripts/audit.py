@@ -186,8 +186,102 @@ def parse_pairs_file(path: Path) -> list[dict]:
     return sections
 
 
+def take_group(text: str, index: int) -> tuple[str, int]:
+    depth = 0
+    i = index
+    while i < len(text):
+        if text[i] == "{":
+            depth += 1
+        elif text[i] == "}":
+            depth -= 1
+            if depth == 0:
+                return text[index + 1:i], i + 1
+        i += 1
+    return text[index + 1:], len(text)
+
+
+def remove_braced_macros(text: str, names: set[str]) -> str:
+    """删除 \\name{...} 及其内容，支持嵌套花括号。"""
+    out, i = [], 0
+    while i < len(text):
+        if text[i] == "\\":
+            j = i + 1
+            while j < len(text) and (text[j].isalpha() or text[j] == "@"):
+                j += 1
+            name = text[i + 1:j]
+            if name in names:
+                k = j
+                while k < len(text) and text[k] in " \t\n":
+                    k += 1
+                if k < len(text) and text[k] == "[":
+                    close = text.find("]", k)
+                    k = close + 1 if close >= 0 else k
+                if k < len(text) and text[k] == "{":
+                    _, k = take_group(text, k)
+                    i = k
+                    continue
+            out.append(text[i:j])
+            i = j
+            continue
+        out.append(text[i])
+        i += 1
+    return "".join(out)
+
+
+def normalize_match(text: str) -> str:
+    """用于判断对照文件是否仍与正文一致。"""
+    text = re.sub(r"〔原注〕|〔译注〕|〔章〕", "", text)
+    text = re.sub(r"\s+", "", text)
+    return text
+
+
+def strip_footnotes(text: str) -> str:
+    return remove_braced_macros(text, {"footnote", "zhu"})
+
+
+def chapter_norm(tex_path: Path) -> str:
+    text = strip_footnotes(read_text(tex_path))
+    return normalize_match(strip_latex(text))
+
+
+def chapter_blocks(tex_path: Path) -> list[tuple[str, str]]:
+    """当前正文的段落列表：[(可读文本, 归一化文本)]。"""
+    text = strip_footnotes(read_text(tex_path))
+    text = strip_latex(text)
+    blocks = []
+    for block in re.split(r"\n\s*\n", text):
+        block = block.strip()
+        norm = normalize_match(block)
+        if norm:
+            blocks.append((block, norm))
+    return blocks
+
+
+def bigrams(text: str) -> set[str]:
+    return {text[i:i + 2] for i in range(len(text) - 1)}
+
+
+def jaccard(a: set[str], b: set[str]) -> float:
+    if not a or not b:
+        return 0.0
+    return len(a & b) / len(a | b)
+
+
+def best_block(target_norm: str, blocks: list[tuple[str, str]]) -> tuple[str, float]:
+    target_set = bigrams(target_norm)
+    best_text, best_score = "", 0.0
+    for text, norm in blocks:
+        score = jaccard(target_set, bigrams(norm))
+        if score > best_score:
+            best_text, best_score = text, score
+    return best_text, best_score
+
+
 def build_inventory_from_pairs(project: Path, stem: str, pairs_path: Path,
-                               terms: list[dict], max_chars: int) -> dict:
+                               terms: list[dict], max_chars: int,
+                               current_norm: str = "",
+                               current_blocks: list[tuple[str, str]] | None = None) -> dict:
+    current_blocks = current_blocks or []
     sections = parse_pairs_file(pairs_path)
     segments = []
     seq = 0
@@ -199,6 +293,21 @@ def build_inventory_from_pairs(project: Path, stem: str, pairs_path: Path,
             if not source and not target:
                 continue
             seq += 1
+            target_norm = normalize_match(target)
+            refreshed = False
+            match_score = 0.0
+            stale = False
+            if current_norm and target_norm:
+                if target_norm in current_norm:
+                    match_score = 1.0
+                else:
+                    candidate, score = best_block(target_norm, current_blocks)
+                    match_score = round(score, 4)
+                    if score >= 0.5:
+                        target = candidate
+                        refreshed = True
+                    else:
+                        stale = True
             segments.append({
                 "id": f"{stem}:p{seq:03d}",
                 "unit": stem,
@@ -209,6 +318,9 @@ def build_inventory_from_pairs(project: Path, stem: str, pairs_path: Path,
                 "source_chars": len(source),
                 "target_chars": len(target),
                 "aligned": section["aligned"],
+                "target_stale": stale,
+                "target_refreshed": refreshed,
+                "target_match": match_score,
                 "auto_flags": auto_flags(source, target, terms),
             })
     return {
@@ -219,6 +331,8 @@ def build_inventory_from_pairs(project: Path, stem: str, pairs_path: Path,
                                  if p.get("target")),
         "aligned": all(s["aligned"] for s in sections) if sections else False,
         "source": "pairs",
+        "stale_targets": sum(1 for s in segments if s["target_stale"]),
+        "refreshed_targets": sum(1 for s in segments if s.get("target_refreshed")),
         "segments": segments,
     }
 
@@ -232,8 +346,10 @@ def build_inventory(project: Path, max_chars: int) -> dict:
             continue
         pairs_file = project / "notes" / f"_{stem}_pairs.md"
         if pairs_file.exists():
-            unit = build_inventory_from_pairs(project, stem, pairs_file,
-                                              terms, max_chars)
+            unit = build_inventory_from_pairs(
+                project, stem, pairs_file, terms, max_chars,
+                current_norm=chapter_norm(tex_path),
+                current_blocks=chapter_blocks(tex_path))
             total += len(unit["segments"])
             units.append(unit)
             continue
@@ -266,6 +382,8 @@ def build_inventory(project: Path, max_chars: int) -> dict:
         "generated_at": now(),
         "max_chars": max_chars,
         "total_segments": total,
+        "stale_targets": sum(u.get("stale_targets", 0) for u in units),
+        "refreshed_targets": sum(u.get("refreshed_targets", 0) for u in units),
         "units": units,
     }
 
@@ -327,12 +445,14 @@ def plan_round(project: Path, size: int, seed: int, round_no: int,
             continue
         pool = [s for s in unit["segments"]
                 if (not aligned_only or s.get("aligned", True))
+                and not s.get("target_stale", False)
                 and (with_replacement or s["id"] not in sampled_before)]
         if pool:
             pools[unit["unit"]] = pool
 
     eligible = sum(1 for s in segments.values()
-                   if not aligned_only or s.get("aligned", True))
+                   if (not aligned_only or s.get("aligned", True))
+                   and not s.get("target_stale", False))
 
     available = sum(len(pool) for pool in pools.values())
     if available == 0:
@@ -419,14 +539,18 @@ def compute_stats(project: Path, min_coverage: float, quiet_rounds: int) -> dict
 
     units = []
     for unit in inventory.get("units", []):
-        unit_ids = [s["id"] for s in unit["segments"]]
-        sampled = [i for i in unit_ids if i in logged_ids]
-        reviewed = [i for i in unit_ids if i in latest]
+        active_ids = [s["id"] for s in unit["segments"]
+                      if not s.get("target_stale")]
+        sampled = [i for i in active_ids if i in logged_ids]
+        reviewed = [i for i in active_ids if i in latest]
         errors = [i for i in reviewed if latest[i]["result"] != "ok"]
         units.append({
             "unit": unit["unit"],
-            "segments": len(unit_ids),
-            "eligible": sum(1 for s in unit["segments"] if s.get("aligned", True)),
+            "segments": len(active_ids),
+            "eligible": sum(1 for s in unit["segments"]
+                            if s.get("aligned", True)
+                            and not s.get("target_stale")),
+            "stale": sum(1 for s in unit["segments"] if s.get("target_stale")),
             "sampled": len(sampled),
             "reviewed": len(reviewed),
             "errors": len(errors),
@@ -435,12 +559,13 @@ def compute_stats(project: Path, min_coverage: float, quiet_rounds: int) -> dict
             "target_paragraphs": unit["target_paragraphs"],
         })
 
-    reviewed_ids = list(latest)
+    reviewed_ids = [i for i in latest if not segments[i].get("target_stale")]
     error_ids = [i for i in reviewed_ids if latest[i]["result"] != "ok"]
     n, k = len(reviewed_ids), len(error_ids)
     ci = wilson(k, n)
     total_all = len(segments)
-    total = sum(1 for s in segments.values() if s.get("aligned", True))
+    total = sum(1 for s in segments.values()
+                if s.get("aligned", True) and not s.get("target_stale"))
 
     rounds = sorted({int(r["round"]) for r in log if r.get("round", "").isdigit()})
     by_round = []
@@ -555,6 +680,12 @@ def main() -> int:
     inv.add_argument("--max-chars", type=int, default=0)
     inv.add_argument("--json", action="store_true")
 
+    verify = sub.add_parser("verify", help="校验对照文件是否仍与正文一致")
+    verify.add_argument("--project", default=".")
+    verify.add_argument("--strict", action="store_true",
+                        help="存在 stale 时返回退出码 1")
+    verify.add_argument("--json", action="store_true")
+
     plan = sub.add_parser("plan", help="生成一轮抽样")
     plan.add_argument("--project", default=".")
     plan.add_argument("--size", type=int, default=20)
@@ -601,16 +732,48 @@ def main() -> int:
         inventory = load_inventory(project, refresh=True, max_chars=args.max_chars)
         summary = {"ok": True, "exit_code": 0,
                    "total_segments": inventory["total_segments"],
+                   "stale_targets": inventory.get("stale_targets", 0),
+                   "refreshed_targets": inventory.get("refreshed_targets", 0),
                    "units": [{"unit": u["unit"], "segments": len(u["segments"]),
+                              "stale": u.get("stale_targets", 0),
+                              "refreshed": u.get("refreshed_targets", 0),
                               "aligned": u["aligned"]} for u in inventory["units"]]}
         if args.json:
             print(json.dumps(summary, ensure_ascii=False, indent=2))
         else:
-            print(f"段落配对：{summary['total_segments']} 段")
+            print(f"段落配对：{summary['total_segments']} 段；"
+                  f"对照文件过时：{summary['stale_targets']} 段")
             for row in summary["units"]:
                 print(f"  {row['unit']:<12} {row['segments']:>5} 段  "
-                      f"对齐：{'是' if row['aligned'] else '否'}")
+                      f"过时 {row['stale']:>3}  对齐：{'是' if row['aligned'] else '否'}")
         return 0
+
+    if args.command == "verify":
+        inventory = load_inventory(project, refresh=True)
+        stale = []
+        for unit in inventory.get("units", []):
+            for seg in unit.get("segments", []):
+                if seg.get("target_stale"):
+                    stale.append({"id": seg["id"], "unit": seg["unit"],
+                                  "section": seg.get("section", ""),
+                                  "target": seg["target"][:120]})
+        result = {"ok": bool(not stale or not args.strict),
+                  "exit_code": 1 if (stale and args.strict) else 0,
+                  "total_segments": inventory["total_segments"],
+                  "stale": len(stale),
+                  "refreshed": inventory.get("refreshed_targets", 0),
+                  "stale_targets": stale}
+        if args.json:
+            print(json.dumps(result, ensure_ascii=False, indent=2))
+        else:
+            print(f"对照文件：{inventory['total_segments']} 段，"
+                  f"与正文不一致 {len(stale)} 段，"
+                  f"已按正文刷新 {result['refreshed']} 段")
+            for row in stale[:20]:
+                print(f"  {row['id']:<14} {row['section'][:30]}  {row['target'][:50]}")
+            if len(stale) > 20:
+                print(f"  … 其余 {len(stale) - 20} 段")
+        return result["exit_code"]
 
     if args.command == "plan":
         result = plan_round(project, args.size, args.seed, args.round,
