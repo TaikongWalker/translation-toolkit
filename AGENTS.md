@@ -34,6 +34,7 @@ python scripts/status.py --project projects/my-book --json
 | `style.py --list\|--show\|--apply --json` | 思维阁文风档位 | `profiles[]` / `profile` / `style_id` |
 | `chunk.py --project <p> --unit <u> --out <d> --json` | 把长章切成无损块 | `chunks[]` `source_sha256` `lossless` |
 | `audit.py inventory\|plan\|record\|stats\|report` | 随机抽样复核 | `tasks[]` `coverage` `error_rate_ci95` `stop_recommended` |
+| `sample_size.py --project <p> --json` | 计算所需样本量与轮次 | `required_samples` `additional_samples` `per_round` |
 | `extract.py --input <f> --out <p>/source --json` | 多格式原文抽取 | `format` `backend` `files` `units[]` `warnings[]` |
 | `extract.py --list-formats --json` | 后端可用性 | `engines` `formats[]` |
 | `build.ps1 -Project <p> -Json` | 构建 PDF | `ok` `pdf` `pages` `check{ok,error,warn,info}` |
@@ -68,6 +69,14 @@ python scripts/audit.py stats --project . --json
 - 每个 task 带 `auto_flags`（数字缺失、占位、英文残留、术语缺失、译文缺失），先处理标记项。
 - `stats` 的 `stop_recommended` 只有在最近 N 轮无新增错误且覆盖率达到阈值时才为真；不要只看错误率为 0。
 - 结果写入 `notes/audit/`，固定 seed 可复现。
+
+需要回答“到底要抽多少段”时，用 `sample_size.py`：
+
+```powershell
+python scripts/sample_size.py --project . --margin 0.01 --confidence 0.95 --json
+```
+
+给出 `required_samples`、`additional_samples` 与 `per_round`。它的结论是**错误率上界**，不是绝对无遗漏；不要向用户表述成“已证明零错误”。
 
 ## 原文格式
 
@@ -114,6 +123,7 @@ status → 读取候选与上下文 → 翻译/审校单章 → check → 修复
 - `final-check` — 全书终检与 PDF 核验
 - `select-style` — 思维阁选档与应用
 - `audit-sample` — 随机抽样复核与残余错误估计
+- `sample-size` — 所需样本量与轮次计算
 
 ## 硬性规则（不可协商）
 

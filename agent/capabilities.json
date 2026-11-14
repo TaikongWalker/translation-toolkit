@@ -1,6 +1,6 @@
 {
   "name": "translation-toolkit",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Agent-facing contract for the translation toolkit. Human docs live in docs/; this file is the machine-readable index.",
   "entrypoints": {
     "status": {
@@ -45,6 +45,16 @@
       },
       "writes": ["notes/audit/segments.json", "notes/audit/sample-log.csv",
                  "notes/audit/findings.csv", "notes/audit/report.md"]
+    },
+    "sample_size": {
+      "command": "python scripts/sample_size.py --project <project> --margin 0.01 --confidence 0.95 --json",
+      "purpose": "Compute required sample size / rounds for a target residual error upper bound.",
+      "options": {
+        "--population": "override total segments",
+        "--reviewed N --observed K": "current upper bound and remaining samples",
+        "--table": "common margin/confidence table"
+      },
+      "note": "Returns an upper bound on residual error rate, not proof of zero defects."
     },
     "global_check": {
       "command": "python scripts/global_check.py --project <project> --json",
@@ -111,7 +121,8 @@
     ".claude/skills/polish-chapter/SKILL.md",
     ".claude/skills/final-check/SKILL.md",
     ".claude/skills/select-style/SKILL.md",
-    ".claude/skills/audit-sample/SKILL.md"
+    ".claude/skills/audit-sample/SKILL.md",
+    ".claude/skills/sample-size/SKILL.md"
   ],
   "guardrails": [
     "Never modify source/.",

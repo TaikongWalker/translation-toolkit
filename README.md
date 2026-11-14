@@ -46,7 +46,7 @@ pip install "markitdown>=0.1.9"     # PDF/HTML 首选后端
 - `AGENTS.md`：agent 入口、命令契约、推荐工作循环、硬性规则。
 - `agent/capabilities.json`：机器可读的命令索引、读写文件、JSON schema、退出码。
 - `agent/schemas/`：`status`、`check`、`global_check` 的 JSON Schema。
-- `.claude/skills/`：七个阶段技能，可直接被 Claude Code 调用。
+- `.claude/skills/`：八个阶段技能，可直接被 Claude Code 调用。
 - 所有检查命令支持 `--json`：stdout 只有一份 JSON，日志不混入；退出码 0/1 区分阻断。
 
 一条命令看全书状态：
@@ -90,6 +90,29 @@ python scripts/audit.py report --project .                     # notes/audit/rep
 - `stats` 给出 Wilson 95% 区间与估计残余错误数；最近 N 轮无新增错误且覆盖率达标时才建议停止。
 - 抽样记录与发现写在 `notes/audit/`，固定 `--seed` 可复现。
 - 要独立重复实验而非扩大覆盖，可用 `--with-replacement`。
+
+### 抽多少段才够
+
+`sample_size.py` 直接回答“跑多少轮、抽多少段”：
+
+```powershell
+python scripts/sample_size.py --project . --margin 0.01 --confidence 0.95 --json
+python scripts/sample_size.py --table
+```
+
+零错误样本的常用结论（rule of three）：
+
+| 目标残余率上界 | 90% 置信 | 95% 置信 | 99% 置信 |
+|---:|---:|---:|---:|
+| 5% | 45 | 59 | 90 |
+| 2% | 114 | 149 | 228 |
+| 1% | 230 | 299 | 459 |
+| 0.5% | 460 | 598 | 919 |
+| 0.1% | 2302 | 2995 | 4603 |
+
+- 给出总段落数时自动做有限总体校正（如 4000 段、1%、95% → 288 段）。
+- 已复核若干段时，用 `--reviewed N --observed K` 计算当前上界与还差多少段。
+- 这给出的是**错误率上界**，不是“绝对无遗漏”的证明；前提是随机抽样、独立复核、能发现被抽段落的错误。
 
 ## 思维阁：选择译者文风
 
@@ -142,7 +165,7 @@ translation-toolkit/
 ├─ agent/
 │  ├─ capabilities.json      机器可读的命令与输出索引
 │  └─ schemas/               status / check / global_check 的 JSON Schema
-├─ .claude/skills/           阶段技能：立项、初译、审校、润色、终检、选文风、抽样
+├─ .claude/skills/           阶段技能：立项、初译、审校、润色、终检、选文风、抽样、样本量
 ├─ styles/                   思维阁：译者文风档位
 ├─ docs/                     工作流、翻译规范、质检清单、排版规范
 ├─ scripts/
@@ -152,6 +175,7 @@ translation-toolkit/
 │  ├─ style.py               思维阁档位管理
 │  ├─ chunk.py               长章无损分块
 │  ├─ audit.py               随机抽样复核与残余错误估计
+│  ├─ sample_size.py         抽样样本量与统计功效计算
 │  ├─ extract.py             统一原文抽取（多格式）
 │  ├─ epub_extract.py        EPUB 抽取后端
 │  ├─ scaffold.py            生成逐章 LaTeX 骨架
