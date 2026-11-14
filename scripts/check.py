@@ -131,12 +131,16 @@ def chapter_pairs(project: Path) -> list[tuple[str, Path, Path | None]]:
 # 检查
 # ----------------------------------------------------------------------
 class Checker:
-    def __init__(self, project: Path, summary: bool, max_details: int):
+    def __init__(self, project: Path, summary: bool, max_details: int,
+                 json_mode: bool = False):
         self.project = project
         self.summary = summary
         self.max_details = max_details
+        self.json_mode = json_mode
         self.issues: list[tuple[str, str, str, str]] = []  # code, severity, where, message
         self.counts = {code: 0 for code in SEVERITY}
+        self.meta: dict = {}
+        self.term_count = 0
 
     def add(self, code: str, where: str, message: str) -> None:
         severity = SEVERITY[code]
@@ -273,6 +277,32 @@ class Checker:
         for code, severity, where, message in self.issues:
             by_sev[severity] += 1
 
+        exit_code = 1 if by_sev[ERROR] else 0
+        if self.json_mode:
+            payload = {
+                "project": {
+                    "title": self.meta.get("title", self.project.name),
+                    "path": str(self.project),
+                    "slug": self.meta.get("slug", ""),
+                },
+                "terms": self.term_count,
+                "summary": {
+                    "error": by_sev[ERROR],
+                    "warn": by_sev[WARN],
+                    "info": by_sev[INFO],
+                },
+                "counts": {code: n for code, n in sorted(self.counts.items()) if n},
+                "issues": [
+                    {"code": code, "severity": severity,
+                     "where": where, "message": message}
+                    for code, severity, where, message in self.issues
+                ],
+                "ok": exit_code == 0,
+                "exit_code": exit_code,
+            }
+            print(json.dumps(payload, ensure_ascii=False, indent=2))
+            return exit_code
+
         if not self.summary:
             current = None
             for code, severity, where, message in self.issues:
@@ -304,39 +334,58 @@ def main() -> int:
     parser.add_argument("--summary", action="store_true", help="只输出汇总")
     parser.add_argument("--max-details", type=int, default=0,
                         help="每类最多显示条数（0 = 全部）")
+    parser.add_argument("--json", action="store_true",
+                        help="输出机器可读的 JSON（stdout 只有 JSON）")
     args = parser.parse_args()
 
     project = Path(args.project).resolve()
     if not (project / "project.json").exists():
-        print(f"[错误] 在 {project} 找不到 project.json")
+        if args.json:
+            print(json.dumps({"ok": False, "exit_code": 1,
+                              "error": f"找不到 {project / 'project.json'}"},
+                             ensure_ascii=False, indent=2))
+        else:
+            print(f"[错误] 在 {project} 找不到 project.json")
         return 1
 
     try:
         meta = json.loads(read_text(project / "project.json"))
     except json.JSONDecodeError as exc:
-        print(f"[错误] project.json 无法解析：{exc}")
+        if args.json:
+            print(json.dumps({"ok": False, "exit_code": 1,
+                              "error": f"project.json 无法解析：{exc}"},
+                             ensure_ascii=False, indent=2))
+        else:
+            print(f"[错误] project.json 无法解析：{exc}")
         return 1
 
-    print(f"项目：{meta.get('title', project.name)}")
-    print(f"目录：{project}")
-    print("-" * 60)
+    if not args.json:
+        print(f"项目：{meta.get('title', project.name)}")
+        print(f"目录：{project}")
+        print("-" * 60)
 
-    checker = Checker(project, args.summary, args.max_details)
+    checker = Checker(project, args.summary, args.max_details,
+                      json_mode=args.json)
+    checker.meta = meta
     terms = load_terms(project / "glossary" / "terms.csv")
-    print(f"术语表：{len(terms)} 条")
+    checker.term_count = len(terms)
+    if not args.json:
+        print(f"术语表：{len(terms)} 条")
     checker.check_glossary(terms)
 
     pairs = chapter_pairs(project)
-    if not pairs:
+    if not pairs and not args.json:
         print("[提示] 未找到 source/*.md 与 chapters/*.tex 的对应关系，跳过章节检查。")
     for stem, src, tex in pairs:
         if tex is None:
             continue
-        print(f"检查 {stem} …", end="\r")
+        if not args.json:
+            print(f"检查 {stem} …", end="\r")
         checker.check_chapter(stem, src, tex, terms)
-    print(" " * 40, end="\r")
+    if not args.json:
+        print(" " * 40, end="\r")
 
-    if args.max_details and not args.summary:
+    if args.max_details and not args.summary and not args.json:
         # 按类别截断，避免刷屏
         limited = []
         seen = {}

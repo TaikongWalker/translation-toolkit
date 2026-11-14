@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "global_check.py report",
+  "type": "object",
+  "required": ["ok", "exit_code", "total_chars", "problem_units", "units"],
+  "properties": {
+    "ok": {"type": "boolean"},
+    "exit_code": {"type": "integer", "enum": [0, 1]},
+    "total_chars": {"type": "integer", "minimum": 0},
+    "problem_units": {"type": "integer", "minimum": 0},
+    "units": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["unit", "status"],
+        "properties": {
+          "unit": {"type": "string"},
+          "chars": {"type": "integer"},
+          "todo": {"type": "integer"},
+          "placeholder": {"type": "boolean"},
+          "sections": {
+            "type": "object",
+            "properties": {
+              "source": {"type": ["integer", "null"]},
+              "target": {"type": ["integer", "null"]}
+            }
+          },
+          "footnotes": {
+            "type": "object",
+            "properties": {
+              "source": {"type": ["integer", "null"]},
+              "target": {"type": ["integer", "null"]}
+            }
+          },
+          "figures": {
+            "type": "object",
+            "properties": {
+              "source": {"type": ["integer", "null"]},
+              "target": {"type": ["integer", "null"]}
+            }
+          },
+          "problems": {"type": "array", "items": {"type": "string"}},
+          "status": {"type": "string", "enum": ["OK", "ERROR"]}
+        }
+      }
+    }
+  }
+}

@@ -12,6 +12,47 @@
 - 自动核对脚注数、图数、节数、TODO 残留、标点与数字
 - 把原文参考文献与索引转换为 LaTeX 并纳入成书
 - 项目模板 + 脚手架，几分钟内开始一本新书
+- **Agent native**：每个阶段都有 `--json` 命令、稳定退出码与机器契约（`AGENTS.md`、`agent/capabilities.json`）
+- **思维阁**：可选择译者文风档位，作为可执行的约束而非模仿（`styles/`）
+
+## 面向 agent
+
+仓库从一开始就按“直接给 agent 用”设计：
+
+- `AGENTS.md`：agent 入口、命令契约、推荐工作循环、硬性规则。
+- `agent/capabilities.json`：机器可读的命令索引、读写文件、JSON schema、退出码。
+- `agent/schemas/`：`status`、`check`、`global_check` 的 JSON Schema。
+- `.claude/skills/`：六个阶段技能，可直接被 Claude Code 调用。
+- 所有检查命令支持 `--json`：stdout 只有一份 JSON，日志不混入；退出码 0/1 区分阻断。
+
+一条命令看全书状态：
+
+```powershell
+python scripts/status.py --project projects/my-book --json
+```
+
+返回项目阶段、术语统计、章节 TODO、`check.py` 与 `global_check.py` 的完整结果，以及阻断项列表。
+
+## 思维阁：选择译者文风
+
+```powershell
+python scripts/style.py --list
+python scripts/style.py --show academic-faithful
+python scripts/style.py --apply plain-modern --project projects/my-book
+```
+
+档位是“可执行的风格约束”，不是模仿某位译者：
+
+| id | 名称 | 状态 | 适用 |
+|---|---|---|---|
+| `academic-faithful` | 学术忠实体 | stable | 学术专著、理论文本（默认） |
+| `plain-modern` | 现代平实体 | stable | 普及读物、报告 |
+| `literary-fluent` | 文学流畅体 | experimental | 随笔、小说、文学引文 |
+| `classical-concise` | 古典凝练体 | experimental | 序跋、题词、史料引文 |
+
+`--apply` 写入 `notes/style.selected.md` 与 `project.json` 的 `style_id`；项目特有的 `notes/style.md` 仍然优先。详见 `styles/README.md`。
+
+> 思维阁目前为实验性功能，风格描述均为本项目自写，不复制任何受版权保护的译文。
 
 ## 快速开始
 
@@ -36,11 +77,19 @@ cd projects\my-book
 
 ```
 translation-toolkit/
+├─ AGENTS.md                 agent 入口：命令契约与工作循环
 ├─ CLAUDE.md                 给 AI 助手的协作约定
+├─ agent/
+│  ├─ capabilities.json      机器可读的命令与输出索引
+│  └─ schemas/               status / check / global_check 的 JSON Schema
+├─ .claude/skills/           阶段技能：立项、初译、审校、润色、终检、选文风
+├─ styles/                   思维阁：译者文风档位
 ├─ docs/                     工作流、翻译规范、质检清单、排版规范
 ├─ scripts/
 │  ├─ new-project.ps1        新建项目脚手架
-│  ├─ build.ps1              一键构建
+│  ├─ build.ps1              一键构建（-Json 输出单行 JSON）
+│  ├─ status.py              项目总状态（agent 首选入口）
+│  ├─ style.py               思维阁档位管理
 │  ├─ epub_extract.py        EPUB 抽取
 │  ├─ scaffold.py            生成逐章 LaTeX 骨架
 │  ├─ prepare.py             元信息、章序、术语表

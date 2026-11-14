@@ -1,0 +1,47 @@
+{
+  "id": "academic-faithful",
+  "name": "学术忠实体",
+  "status": "stable",
+  "version": 1,
+  "summary": "保留论证层级、限定语与反讽延迟；术语优先于文采。",
+  "register": "学术专著 / 理论文本",
+  "syntax": {
+    "sentence_length": "中长，允许嵌套",
+    "split_long_sentences": false,
+    "preserve_qualifiers": true,
+    "preserve_argument_order": true,
+    "voice": "以原文主语为准，不强行改成主动句"
+  },
+  "lexicon": {
+    "terminology": "严格遵循术语表；未定名先入表",
+    "foreign_terms": "首次中文（原文），其后中文；作者核心概念保留原文斜体",
+    "register": "书面语，避免口语化与网络语",
+    "four_character_phrases": "少量，且不得改变命题强度"
+  },
+  "punctuation": {
+    "quotes": "全角双引号“”，内层单引号‘’",
+    "dash": "——",
+    "ellipsis": "……",
+    "spacing": "中英文之间不手打空格"
+  },
+  "notes_policy": {
+    "source_footnotes": "全部保留，每章从 1 重编号",
+    "translator_notes": "只用 \\zhu{}，独立编号",
+    "uncertain": "写 \\todo{}，不硬译"
+  },
+  "avoid": [
+    "把长句一律拆成短句",
+    "删除限定语以换取流畅",
+    "把反讽改写成直陈",
+    "用四字格替代原文论证",
+    "临时改译已定名术语"
+  ],
+  "checklist": [
+    "每个限定语在译文中都有对应",
+    "论证连接词（因此、然而、尽管）未被抹平",
+    "术语与 glossary/terms.csv 完全一致",
+    "脚注数量与原文一致",
+    "没有为通顺而增补原文没有的信息"
+  ],
+  "references": []
+}

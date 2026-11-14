@@ -1,0 +1,75 @@
+{
+  "name": "translation-toolkit",
+  "version": "0.2.0",
+  "description": "Agent-facing contract for the translation toolkit. Human docs live in docs/; this file is the machine-readable index.",
+  "entrypoints": {
+    "status": {
+      "command": "python scripts/status.py --project <project> --json",
+      "purpose": "One-call project status: units, terms, TODOs, check and global results, blocking items.",
+      "reads": ["project.json", "notes/progress.csv", "glossary/terms.csv", "chapters/*.tex"],
+      "schema": "agent/schemas/status.schema.json"
+    },
+    "check": {
+      "command": "python scripts/check.py --project <project> --json",
+      "purpose": "Project-level QA: terminology, punctuation, footnote/figure counts, untranslated runs.",
+      "schema": "agent/schemas/check-report.schema.json"
+    },
+    "global_check": {
+      "command": "python scripts/global_check.py --project <project> --json",
+      "purpose": "Whole-book structural comparison between source/*.md and chapters/*.tex.",
+      "schema": "agent/schemas/global-check.schema.json"
+    },
+    "prepare": {
+      "command": "python scripts/prepare.py --project <project> --json",
+      "purpose": "Generate meta.tex, chapters.tex and glossary.tex.",
+      "reads": ["project.json", "glossary/terms.csv", "chapters/*.tex"]
+    },
+    "backmatter": {
+      "command": "python scripts/backmatter.py --project <project> --json",
+      "purpose": "Convert source/backmatter/{bibliography,index}.md into LaTeX.",
+      "reads": ["source/backmatter/*.md"]
+    },
+    "term_candidates": {
+      "command": "python scripts/term_candidates.py --project <project> --json",
+      "purpose": "Extract term candidates from source/*.md.",
+      "reads": ["source/*.md"]
+    },
+    "style": {
+      "command": "python scripts/style.py --list|--show <id>|--apply <id> --project <project> --json",
+      "purpose": "思维阁: list, inspect or apply a translator style profile.",
+      "reads": ["styles/index.json", "styles/<id>/profile.json", "styles/<id>/STYLE.md"],
+      "writes": ["notes/style.selected.md", "project.json:style_id"]
+    },
+    "build": {
+      "command": "pwsh scripts/build.ps1 -Project <project> -Json",
+      "or": "powershell -File scripts/build.ps1 -Project <project> -Json",
+      "purpose": "Generate, compile with XeLaTeX, copy PDF, run check; stdout is one JSON line.",
+      "writes": ["generated/*", "build/*", "dist/*.pdf"]
+    }
+  },
+  "exit_codes": {
+    "0": "success or no blocking issues",
+    "1": "blocking issue, invalid arguments, or unreadable project"
+  },
+  "conventions": {
+    "json_mode": "With --json, stdout contains only one JSON document; logs go to stderr or are suppressed.",
+    "project_root": "A directory containing project.json and main.tex.",
+    "units": "One chapter file in chapters/ plus its source/<stem>.md counterpart.",
+    "terms_authority": "glossary/terms.csv is the only authority for terminology."
+  },
+  "skills": [
+    ".claude/skills/project-intake/SKILL.md",
+    ".claude/skills/translate-chapter/SKILL.md",
+    ".claude/skills/review-chapter/SKILL.md",
+    ".claude/skills/polish-chapter/SKILL.md",
+    ".claude/skills/final-check/SKILL.md",
+    ".claude/skills/select-style/SKILL.md"
+  ],
+  "guardrails": [
+    "Never modify source/.",
+    "Never commit copyrighted source text, translations or ebook files.",
+    "New terms must be added to glossary/terms.csv before use.",
+    "Preserve all source footnotes; use \\zhu{} for translator notes.",
+    "Mark uncertainty with \\todo{reason}; clear before final check."
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "check.py report",
+  "type": "object",
+  "required": ["ok", "exit_code", "project", "terms", "summary", "counts", "issues"],
+  "properties": {
+    "ok": {"type": "boolean"},
+    "exit_code": {"type": "integer", "enum": [0, 1]},
+    "project": {
+      "type": "object",
+      "required": ["title", "path"],
+      "properties": {
+        "title": {"type": "string"},
+        "path": {"type": "string"},
+        "slug": {"type": "string"}
+      }
+    },
+    "terms": {"type": "integer", "minimum": 0},
+    "summary": {
+      "type": "object",
+      "required": ["error", "warn", "info"],
+      "properties": {
+        "error": {"type": "integer", "minimum": 0},
+        "warn": {"type": "integer", "minimum": 0},
+        "info": {"type": "integer", "minimum": 0}
+      }
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": {"type": "integer", "minimum": 0}
+    },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "severity", "where", "message"],
+        "properties": {
+          "code": {"type": "string"},
+          "severity": {"type": "string", "enum": ["ERROR", "WARN", "INFO"]},
+          "where": {"type": "string"},
+          "message": {"type": "string"}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,79 @@
+# AGENTS.md · 给 AI agent 的入口
+
+本仓库是**面向 agent 的翻译工作区**：每个阶段都有确定的命令、稳定的 JSON 输出和明确的退出码。人读文档在 `docs/`，agent 的机器契约在 `agent/capabilities.json`。
+
+> 内容边界：仓库只含工具链、文档与空白模板。不得把任何书籍原文、译文或电子书提交到本仓库；翻译项目应位于 `projects/`（已被 `.gitignore` 忽略）并另行确认授权。
+
+## 先读什么
+
+1. 本文件。
+2. `agent/capabilities.json`：命令、参数、输出契约、退出码。
+3. `docs/01-工作流.md`：阶段与质量门。
+4. 项目的 `notes/context.md`、`notes/style.md`、`notes/style.selected.md`（若存在）、`glossary/terms.csv`。
+
+## 一条命令看状态
+
+```powershell
+python scripts/status.py --project projects/my-book --json
+```
+
+返回项目阶段、术语统计、章节 TODO、`check.py` 与 `global_check.py` 的完整结果、阻断项列表。**任何阶段开始前先跑它**，不要凭记忆判断进度。
+
+## 命令契约
+
+所有检查类命令都支持 `--json`，此时 stdout 只有 JSON，进度与日志不得混入。
+
+| 命令 | 作用 | JSON 关键字段 |
+|---|---|---|
+| `status.py --project <p> --json` | 项目总状态 | `ok` `project` `units` `terms` `chapters` `blocking` `check` `global` |
+| `check.py --project <p> --json` | 项目级质量检查 | `ok` `summary{error,warn,info}` `counts` `issues[]` |
+| `global_check.py --project <p> --json` | 全书结构核对 | `ok` `total_chars` `problem_units` `units[]` |
+| `prepare.py --project <p> --json` | 生成元信息/章序/术语表 | `chapters` `terms{total,final,draft}` `style_id` |
+| `backmatter.py --project <p> --json` | 生成参考文献/索引 | `generated[]` `bibliography` `index` |
+| `term_candidates.py --project <p> --json` | 提取术语候选 | `candidate_count` `candidates[]` |
+| `style.py --list\|--show\|--apply --json` | 思维阁文风档位 | `profiles[]` / `profile` / `style_id` |
+| `build.ps1 -Project <p> -Json` | 构建 PDF | `ok` `pdf` `pages` `check{ok,error,warn,info}` |
+
+退出码：`0` 成功/无阻断；`1` 有阻断项、参数错误或文件不可读。不要把警告当成功，也不要把提示当错误。
+
+## 推荐工作循环
+
+```
+status → 读取候选与上下文 → 翻译/审校单章 → check → 修复 → status → 下一章
+```
+
+- 每次只处理一个翻译单元（一章或一节），改完立即跑 `check.py --json`。
+- `check.py` 的错误（A2/A4/A5/A6/A11/A12）必须清零；警告与提示逐条判断，不要机械忽略。
+- 编译用 `build.ps1 -Json`，只读返回的 `pdf` 与 `check`；失败时读 `log_tail`。
+- 任何取舍写入 `notes/decisions.md`；术语变更走“改表 → forbidden → 全局替换 → 记录”。
+
+## 文风：思维阁
+
+动笔前确定 `project.json.style_id`，并读取 `notes/style.selected.md`。档位是约束，不是模仿：
+
+- `academic-faithful`（默认）：保留限定语、论证层级与反讽延迟。
+- `plain-modern`：适度拆句，降低门槛但不改结构。
+- `literary-fluent`：重节奏，用于文学与引文。
+- `classical-concise`：浅近文言，用于序跋题词。
+
+项目 `notes/style.md` 的特别规定优先于档位；冲突时记录到 `notes/decisions.md`。
+
+## Agent skills
+
+`.claude/skills/` 提供可直接调用的阶段技能：
+
+- `project-intake` — 抽取原文、建元数据、写背景卷宗、提术语候选
+- `translate-chapter` — 单章初译
+- `review-chapter` — 双语审校
+- `polish-chapter` — 单语润色（含文风档位）
+- `final-check` — 全书终检与 PDF 核验
+- `select-style` — 思维阁选档与应用
+
+## 硬性规则（不可协商）
+
+- `source/` 只读；不改写、不删减原文。
+- `glossary/terms.csv` 是唯一术语权威；新术语先入表再使用。
+- 原书脚注全部保留，每章从 1 重编号；译者注只用 `\zhu{}`。
+- 不增写、不删减、不替作者补充观点；不确定写 `\todo{原因}`。
+- 不把受版权保护的原文、译文或电子书提交到本仓库。
+- 修改 `scripts/*.ps1` 后保存为 UTF-8 with BOM。

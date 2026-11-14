@@ -1,6 +1,6 @@
 # 翻译工作区 · AI 协作约定
 
-本仓库是书籍/长文翻译工作区（工具链与模板）。每次会话开始，先读本文件，再按任务读 `docs/` 对应文档。
+本仓库是书籍/长文翻译工作区（工具链与模板）。每次会话开始，先读本文件与 `AGENTS.md`（agent 命令契约），再按任务读 `docs/` 对应文档。
 
 > 仓库不包含任何书籍原文或译文。项目目录 `projects/` 已被 `.gitignore` 忽略；不要把受版权保护的作品内容提交到公开仓库。
 
@@ -45,6 +45,10 @@
 ..\..\scripts\build.ps1                  # 生成 + 编译 + 检查
 ..\..\scripts\build.ps1 -Clean -Open     # 完整重编并打开
 python ..\..\scripts\check.py --project . --summary
+python ..\..\scripts\check.py --project . --json
+python ..\..\scripts\status.py --project . --json
+python ..\..\scripts\style.py --list
+python ..\..\scripts\style.py --apply academic-faithful --project .
 python ..\..\scripts\global_check.py --project .
 python ..\..\scripts\term_candidates.py --project .
 python ..\..\scripts\prepare.py --project .

@@ -1,0 +1,37 @@
+{
+  "name": "思维阁",
+  "version": 1,
+  "status": "experimental",
+  "description": "译者文风档库。每个档位是一组可执行的风格约束，供译前选择、译中遵循、译后检查。风格是约束，不是模仿：不复制任何在世或受版权保护译者的译文。",
+  "selection_field": "style_id",
+  "profiles": [
+    {
+      "id": "academic-faithful",
+      "name": "学术忠实体",
+      "status": "stable",
+      "tags": ["学术", "长句", "限定语", "术语优先"],
+      "summary": "默认档。保留论证层级、限定语与反讽延迟，不为顺口牺牲信息。"
+    },
+    {
+      "id": "plain-modern",
+      "name": "现代平实体",
+      "status": "stable",
+      "tags": ["通顺", "中等句长", "普及"],
+      "summary": "现代书面语，适度拆句，降低阅读门槛，但不改论证结构。"
+    },
+    {
+      "id": "literary-fluent",
+      "name": "文学流畅体",
+      "status": "experimental",
+      "tags": ["文学", "节奏", "语感"],
+      "summary": "重节奏与语感，允许语序重组；用于随笔、小说与引文，慎用于理论正文。"
+    },
+    {
+      "id": "classical-concise",
+      "name": "古典凝练体",
+      "status": "experimental",
+      "tags": ["文言倾向", "短句", "凝练"],
+      "summary": "文白相间的凝练句法，适合序跋、题词与史料引文；不宜整本现代学术专著。"
+    }
+  ]
+}

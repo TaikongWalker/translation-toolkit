@@ -1,0 +1,47 @@
+{
+  "id": "classical-concise",
+  "name": "古典凝练体",
+  "status": "experimental",
+  "version": 1,
+  "summary": "文白相间的凝练句法，适合序跋、题词与史料引文；不宜整本现代学术专著。",
+  "register": "序跋 / 题词 / 史料引文",
+  "syntax": {
+    "sentence_length": "短，以分句与对举为主",
+    "split_long_sentences": "重组为短句或对句",
+    "preserve_qualifiers": true,
+    "preserve_argument_order": true,
+    "voice": "文白相间，避免生造文言"
+  },
+  "lexicon": {
+    "terminology": "术语仍用通行现代译名，不强行文言化",
+    "foreign_terms": "首次中文（原文），其后中文",
+    "register": "浅近文言，以可读为限",
+    "four_character_phrases": "可用，但须自然，不堆砌"
+  },
+  "punctuation": {
+    "quotes": "全角双引号“”",
+    "dash": "——",
+    "ellipsis": "……",
+    "spacing": "中英文之间不手打空格"
+  },
+  "notes_policy": {
+    "source_footnotes": "全部保留",
+    "translator_notes": "说明文体取舍与典故",
+    "uncertain": "写 \\todo{}"
+  },
+  "avoid": [
+    "生造文言词",
+    "把现代概念硬译成古语",
+    "为凝练而删信息",
+    "整本现代学术著作使用此档"
+  ],
+  "checklist": [
+    "文言成分可读，不造成误解",
+    "术语仍是现代通行译名",
+    "没有为对仗增删内容",
+    "适合朗读，不拗口"
+  ],
+  "references": [
+    {"name": "严复", "note": "风格参照：凝练、重逻辑层次；仅作特征描述，不模仿具体译文。"}
+  ]
+}

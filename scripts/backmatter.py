@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import html
+import json
 import re
 from pathlib import Path
 
@@ -85,6 +86,8 @@ def convert_index(src: Path) -> str:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--project", default=".")
+    ap.add_argument("--json", action="store_true",
+                    help="输出机器可读的 JSON（stdout 只有 JSON）")
     args = ap.parse_args()
     proj = Path(args.project).resolve()
     src_dir = proj / "source" / "backmatter"
@@ -93,12 +96,26 @@ def main() -> None:
 
     bib = src_dir / "bibliography.md"
     idx = src_dir / "index.md"
+    generated = []
     if bib.exists():
         (gen / "bibliography.tex").write_text(convert_bibliography(bib), encoding="utf-8")
-        print(f"[backmatter] 参考文献 -> generated/bibliography.tex")
+        generated.append("generated/bibliography.tex")
+        if not args.json:
+            print("[backmatter] 参考文献 -> generated/bibliography.tex")
     if idx.exists():
         (gen / "index.tex").write_text(convert_index(idx), encoding="utf-8")
-        print(f"[backmatter] 索引 -> generated/index.tex")
+        generated.append("generated/index.tex")
+        if not args.json:
+            print("[backmatter] 索引 -> generated/index.tex")
+
+    if args.json:
+        print(json.dumps({
+            "ok": True,
+            "exit_code": 0,
+            "generated": generated,
+            "bibliography": "generated/bibliography.tex" in generated,
+            "index": "generated/index.tex" in generated,
+        }, ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":

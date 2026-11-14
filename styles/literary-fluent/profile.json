@@ -1,0 +1,48 @@
+{
+  "id": "literary-fluent",
+  "name": "文学流畅体",
+  "status": "experimental",
+  "version": 1,
+  "summary": "重节奏与语感，允许语序重组；用于随笔、小说与引文，慎用于理论正文。",
+  "register": "文学 / 随笔 / 叙事性非虚构",
+  "syntax": {
+    "sentence_length": "随文体变化，允许短句与长句交替",
+    "split_long_sentences": "允许重组，以节奏为单位",
+    "preserve_qualifiers": true,
+    "preserve_argument_order": "叙事顺序优先，论证性段落仍须保序",
+    "voice": "可调整主语与语序以形成中文节奏"
+  },
+  "lexicon": {
+    "terminology": "术语仍以术语表为准，不因文体牺牲精度",
+    "foreign_terms": "首次中文（原文），其后中文",
+    "register": "文学书面语，允许意象与声音层面的经营",
+    "four_character_phrases": "可用，但避免陈词滥调"
+  },
+  "punctuation": {
+    "quotes": "全角双引号“”",
+    "dash": "——",
+    "ellipsis": "……",
+    "spacing": "中英文之间不手打空格"
+  },
+  "notes_policy": {
+    "source_footnotes": "全部保留",
+    "translator_notes": "涉及双关、典故、声音效果时添加",
+    "uncertain": "写 \\todo{}"
+  },
+  "avoid": [
+    "为节奏而增删事实",
+    "把反讽润色成抒情",
+    "用华丽辞藻掩盖意义空缺",
+    "把理论段落改写成散文"
+  ],
+  "checklist": [
+    "朗读时节奏自然，断句不破坏意义",
+    "双关与声音效果有译注或替代方案",
+    "没有为美感增加原文没有的意象",
+    "叙事顺序与原文一致"
+  ],
+  "references": [
+    {"name": "傅雷", "note": "风格参照：句法舒展、语感连贯；仅作特征描述，不模仿具体译文。"},
+    {"name": "朱生豪", "note": "风格参照：口语节奏与戏剧性；仅作特征描述，不模仿具体译文。"}
+  ]
+}

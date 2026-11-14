@@ -1,0 +1,45 @@
+{
+  "id": "plain-modern",
+  "name": "现代平实体",
+  "status": "stable",
+  "version": 1,
+  "summary": "现代书面语，适度拆句，降低阅读门槛而不改变论证结构。",
+  "register": "普及读物 / 报告 / 长文",
+  "syntax": {
+    "sentence_length": "中等，单句以 25—45 字为宜",
+    "split_long_sentences": "允许，但须保留逻辑连接",
+    "preserve_qualifiers": true,
+    "preserve_argument_order": true,
+    "voice": "优先自然中文语序，不扭曲原意"
+  },
+  "lexicon": {
+    "terminology": "严格遵循术语表",
+    "foreign_terms": "首次中文（原文），其后中文",
+    "register": "干净、克制的现代书面语",
+    "four_character_phrases": "可适度使用，避免套话"
+  },
+  "punctuation": {
+    "quotes": "全角双引号“”",
+    "dash": "——",
+    "ellipsis": "……",
+    "spacing": "中英文之间不手打空格"
+  },
+  "notes_policy": {
+    "source_footnotes": "全部保留",
+    "translator_notes": "只在读者确实需要时添加",
+    "uncertain": "写 \\todo{}"
+  },
+  "avoid": [
+    "为短而短，切断因果关系",
+    "把学术概念改成日常比喻而失去精度",
+    "添加原文没有的解释",
+    "过度使用“其实”“说白了”等口语标记"
+  ],
+  "checklist": [
+    "拆句后逻辑关系仍然清楚",
+    "术语没有被口语化改写",
+    "没有丢失限定语",
+    "段落长度适合连续阅读"
+  ],
+  "references": []
+}

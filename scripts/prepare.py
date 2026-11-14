@@ -18,6 +18,13 @@ from pathlib import Path
 
 CATEGORY_ORDER = ["人名", "地名", "机构", "作品", "术语", "其他"]
 
+QUIET = False
+
+
+def log(message: str) -> None:
+    if not QUIET:
+        print(message)
+
 LATEX_ESCAPES = {
     "\\": r"\textbackslash{}",
     "&": r"\&",
@@ -69,12 +76,12 @@ def write_meta(project: Path, meta: dict) -> None:
     out = project / "generated" / "meta.tex"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    print(f"[prepare] 已生成 {out.relative_to(project)}")
+    log(f"[prepare] 已生成 {out.relative_to(project)}")
 
 
 def load_terms(path: Path) -> list[dict]:
     if not path.exists():
-        print(f"[prepare] 未找到 {path}，术语表将为空")
+        log(f"[prepare] 未找到 {path}，术语表将为空")
         return []
     with path.open(encoding="utf-8-sig", newline="") as fh:
         reader = csv.DictReader(fh)
@@ -89,7 +96,7 @@ def load_terms(path: Path) -> list[dict]:
             if not source and not target:
                 continue
             if not source or not target:
-                print(f"[警告] {path.name} 第 {lineno} 行缺 source 或 target，已跳过")
+                log(f"[警告] {path.name} 第 {lineno} 行缺 source 或 target，已跳过")
                 continue
             row = {k: (v or "").strip() for k, v in row.items() if k}
             rows.append(row)
@@ -172,7 +179,8 @@ def write_chapter_list(project: Path) -> None:
     out = project / "generated" / "chapters.tex"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    print(f"[prepare] 已生成 {out.relative_to(project)}（{len(files)} 章）")
+    log(f"[prepare] 已生成 {out.relative_to(project)}（{len(files)} 章）")
+    return files
 
 
 def main() -> int:
@@ -183,7 +191,12 @@ def main() -> int:
     parser.add_argument("--project", default=".", help="项目目录（默认当前目录）")
     parser.add_argument("--final-only", action="store_true",
                         help="术语表只收录 status=final 的条目（默认含暂定条目）")
+    parser.add_argument("--json", action="store_true",
+                        help="输出机器可读的 JSON（stdout 只有 JSON）")
     args = parser.parse_args()
+
+    global QUIET
+    QUIET = args.json
 
     project = Path(args.project).resolve()
     meta = load_project(project)
@@ -195,9 +208,23 @@ def main() -> int:
     out = project / "generated" / "glossary.tex"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(tex, encoding="utf-8")
-    write_chapter_list(project)
+    files = write_chapter_list(project)
 
     final_count = sum(1 for r in rows if r.get("status", "").lower() == "final")
+    if args.json:
+        print(json.dumps({
+            "ok": True,
+            "exit_code": 0,
+            "generated": ["generated/meta.tex",
+                          str(out.relative_to(project)),
+                          "generated/chapters.tex"],
+            "chapters": len(files),
+            "terms": {"total": len(rows), "final": final_count,
+                      "draft": len(rows) - final_count},
+            "style_id": meta.get("style_id", ""),
+        }, ensure_ascii=False, indent=2))
+        return 0
+
     print(
         f"[prepare] 已生成 {out.relative_to(project)}"
         f"（术语 {len(rows)} 条，其中 final {final_count} 条）"

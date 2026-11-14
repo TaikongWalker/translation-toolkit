@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 import re
 import sys
 from collections import Counter
@@ -61,12 +62,19 @@ def main() -> int:
     parser.add_argument("--project", default=".")
     parser.add_argument("--min-count", type=int, default=2)
     parser.add_argument("--limit", type=int, default=400)
+    parser.add_argument("--json", action="store_true",
+                        help="输出机器可读的 JSON（stdout 只有 JSON）")
     args = parser.parse_args()
 
     project = Path(args.project).resolve()
     files = read_sources(project)
     if not files:
-        print(f"[错误] 在 {project / 'source'} 找不到 *.md")
+        if args.json:
+            print(json.dumps({"ok": False, "exit_code": 1,
+                              "error": f"在 {project / 'source'} 找不到 *.md"},
+                             ensure_ascii=False, indent=2))
+        else:
+            print(f"[错误] 在 {project / 'source'} 找不到 *.md")
         return 1
 
     counts: Counter = Counter()
@@ -126,6 +134,21 @@ def main() -> int:
                 phrase, "", categories.get(phrase, "待定"), "draft", "",
                 "", count, examples.get(phrase, ""),
             ])
+
+    if args.json:
+        print(json.dumps({
+            "ok": True,
+            "exit_code": 0,
+            "output": str(out.relative_to(project)),
+            "candidate_count": len(selected),
+            "candidates": [
+                {"source": phrase, "count": count,
+                 "category": categories.get(phrase, "待定"),
+                 "example": examples.get(phrase, "")}
+                for phrase, count in selected
+            ],
+        }, ensure_ascii=False, indent=2))
+        return 0
 
     print(f"[terms] 已生成 {out.relative_to(project)}：{len(selected)} 个候选")
     print("\n高频候选（前 20）：")
