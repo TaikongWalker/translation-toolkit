@@ -95,7 +95,8 @@
         "docx"
       ],
       "requires": [
-        "pandoc (winget install JohnMacFarlane.Pandoc)"
+        "pandoc (winget install JohnMacFarlane.Pandoc)",
+        "xelatex + pymupdf for TikZ figures"
       ],
       "note": "PDF remains the XeLaTeX build; other formats simplify layout."
     },
