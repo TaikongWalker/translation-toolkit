@@ -155,6 +155,7 @@ status → 读取候选与上下文 → 翻译/审校单章 → check → 修复
 - `audit-sample` — 随机抽样复核与残余错误估计
 - `sample-size` — 所需样本量与轮次计算
 - `qa-mode` — 在全量检查与抽样检查之间选择
+- `export-formats` — 导出 EPUB/DOCX/HTML/Markdown
 
 ## 硬性规则（不可协商）
 

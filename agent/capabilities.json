@@ -141,7 +141,8 @@
     ".claude/skills/select-style/SKILL.md",
     ".claude/skills/audit-sample/SKILL.md",
     ".claude/skills/sample-size/SKILL.md",
-    ".claude/skills/qa-mode/SKILL.md"
+    ".claude/skills/qa-mode/SKILL.md",
+    ".claude/skills/export-formats/SKILL.md"
   ],
   "guardrails": [
     "Never modify source/.",

@@ -47,7 +47,7 @@ pip install "markitdown>=0.1.9"     # PDF/HTML 首选后端
 - `AGENTS.md`：agent 入口、命令契约、推荐工作循环、硬性规则。
 - `agent/capabilities.json`：机器可读的命令索引、读写文件、JSON schema、退出码。
 - `agent/schemas/`：`status`、`check`、`global_check` 的 JSON Schema。
-- `.claude/skills/`：九个阶段技能，可直接被 Claude Code 调用。
+- `.claude/skills/`：十个阶段技能，可直接被 Claude Code 调用。
 - 所有检查命令支持 `--json`：stdout 只有一份 JSON，日志不混入；退出码 0/1 区分阻断。
 
 一条命令看全书状态：
@@ -201,7 +201,7 @@ translation-toolkit/
 ├─ agent/
 │  ├─ capabilities.json      机器可读的命令与输出索引
 │  └─ schemas/               status / check / global_check 的 JSON Schema
-├─ .claude/skills/           阶段技能：立项、初译、审校、润色、终检、选文风、抽样、样本量、质检模式
+├─ .claude/skills/           阶段技能：立项、初译、审校、润色、终检、选文风、抽样、样本量、质检模式、导出
 ├─ styles/                   思维阁：译者文风档位
 ├─ docs/                     工作流、翻译规范、质检清单、排版规范
 ├─ scripts/
