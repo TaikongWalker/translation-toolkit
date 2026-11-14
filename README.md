@@ -82,8 +82,10 @@ python scripts/style.py --apply plain-modern --project projects/my-book
 
 环境：Windows + PowerShell 5.1+、TeX Live（XeLaTeX + latexmk）、Python 3.10+。核心脚本仅用标准库；PDF/HTML 可选安装 MarkItDown。
 
+本工具**不内置翻译模型**：原文抽取、术语、检查与排版由工具负责，译稿由人或 agent 写入 `chapters/*.tex`。agent 可从 `AGENTS.md` 与 `.claude/skills/` 进入。
+
 ```powershell
-git clone <this-repo> translation-toolkit
+git clone https://github.com/TaikongWalker/translation-toolkit.git
 cd translation-toolkit
 
 # 新建项目；按扩展名自动抽取（EPUB/PDF/TXT/MD/HTML/DOCX/ODT/RTF/FB2/MOBI/AZW3）
@@ -165,11 +167,21 @@ project/
 
 详见 [`docs/01-工作流.md`](docs/01-工作流.md)、[`docs/02-翻译规范.md`](docs/02-翻译规范.md)、[`docs/03-质检清单.md`](docs/03-质检清单.md)、[`docs/04-排版规范.md`](docs/04-排版规范.md)。
 
+## 与同类项目的区别
+
+- **多数开源项目是自动翻译器**（TranslateBooksWithLLMs、wenyi、BabelDOC、docutranslate 等）：输入一本书，调用模型，输出译文。
+- **本项目是工作区与工具链**：不调用模型，负责人机协作下的原文抽取、术语治理、审校门禁与 LaTeX 成书。
+- **相对 LaTeX 学术工具**（LaTeXTrans、lesia、Joon515 的 book-translator skill）：本项目面向整本书的出版流程——双面排版、脚注、图注、参考文献、索引、术语表，而不只是论文或公式。
+- **Agent native**：稳定的 JSON 命令契约、`status.py` 单入口与阶段 skills。
+- **思维阁**：可选择的译者文风档位。
+
 ## 已知限制
 
 - 构建脚本以 Windows PowerShell 为主；macOS/Linux 可手动执行 `prepare.py`、`backmatter.py`、`latexmk`，或自行改写 `build.ps1`。
 - 字体默认使用 Windows 自带 SimSun/SimHei；其他系统需修改 `preamble.tex`。
 - 索引保留原书页码，不重映射到译文分页。
+- PDF / RTF / ODT 抽取不保留完整脚注与图片；扫描版 PDF 需先 OCR。
+- MOBI/AZW3 依赖 Calibre 的 `ebook-convert`。
 
 ## 许可证
 

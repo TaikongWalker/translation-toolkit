@@ -60,6 +60,8 @@ def chapter_files(project: Path) -> list[dict]:
     out = []
     chapters = project / "chapters"
     for path in sorted(chapters.glob("*.tex")) if chapters.exists() else []:
+        if path.name.startswith("_"):
+            continue
         text = path.read_text(encoding="utf-8-sig", errors="replace")
         out.append({
             "file": str(path.relative_to(project).as_posix()),
@@ -103,8 +105,12 @@ def build_status(project: Path, run_checks: bool = True) -> dict:
     blocking = []
     if todos:
         blocking.append(f"章节内仍有 {todos} 处 TODO")
+    if check and not check.get("ok", False) and not check.get("summary", {}).get("error", 0):
+        blocking.append(f"check.py 未能完成：{check.get('error', '未知错误')}")
     if check and check.get("summary", {}).get("error", 0):
         blocking.append(f"check.py 报错 {check['summary']['error']} 处")
+    if global_result and global_result.get("error"):
+        blocking.append(f"global_check 未能完成：{global_result['error']}")
     if global_result and global_result.get("problem_units", 0):
         blocking.append(f"global_check 问题章节 {global_result['problem_units']} 个")
     for unit in units:

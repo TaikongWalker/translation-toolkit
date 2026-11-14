@@ -1,6 +1,6 @@
 ---
 name: project-intake
-description: 新书立项：从 EPUB 抽取原文、建立 project.json、背景卷宗与术语候选。Use when starting a new translation project.
+description: 新书立项：从常见阅读文本格式抽取原文、建立 project.json、背景卷宗与术语候选。Use when starting a new translation project.
 ---
 
 # 立项与原文抽取
@@ -13,7 +13,7 @@ description: 新书立项：从 EPUB 抽取原文、建立 project.json、背景
    ```powershell
    .\scripts\new-project.ps1 -Name <slug> -Title "中文书名" -Source "D:\books\book.epub"
    ```
-   非 EPUB：先按 `docs/01-工作流.md` 阶段 0 处理，再放入 `source/`。
+   支持 EPUB / PDF / TXT / Markdown / HTML / DOCX / ODT / RTF / FB2 / MOBI / AZW3；不支持的原格式先转换为 TXT/DOCX/EPUB（见 `docs/01-工作流.md` 阶段 0）。
 
 2. 核对抽取完整性：读 `source/manifest.csv`，确认章节数、图数、脚注数与原书一致。不一致时停止，不要开始翻译。
 

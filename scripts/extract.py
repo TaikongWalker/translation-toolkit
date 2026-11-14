@@ -16,8 +16,8 @@ source/manifest.csv。脚注、图片、表格的保留程度取决于输入格�
     python scripts/extract.py --input notes.txt --out source --json
     python scripts/extract.py --list-formats --json
 
-仅用标准库；PDF 优先调用 poppler 的 pdftotext，其次 PyMuPDF；
-MOBI/AZW3 调用 Calibre；两者都不是必需依赖。
+核心只用标准库；PDF / HTML 优先调用可选的 MarkItDown，其次 poppler
+的 pdftotext 或 PyMuPDF；MOBI/AZW3 调用 Calibre。三者都不是必需依赖。
 """
 
 from __future__ import annotations
@@ -154,7 +154,7 @@ def split_markdown(text: str, max_chars: int) -> list[dict]:
         end = cuts[idx + 1][0] if idx + 1 < len(cuts) else len(lines)
         body = "\n".join(lines[start + 1:end]).strip()
         segments.append({"title": title, "body": body, "front": False})
-    return dedupe_toc(segments)
+    return drop_early_toc_entries(dedupe_toc(segments))
 
 
 def chapter_key(title: str) -> str:
@@ -484,7 +484,8 @@ def extract_rtf(path: Path) -> str:
     text = re.sub(r"\{\\\*.*?\}", "", text, flags=re.S)
     text = re.sub(r"\{\\(?:fonttbl|colortbl|stylesheet|info|pict).*?\}", "",
                   text, flags=re.S)
-    text = text.replace("\\par", "\n\n").replace("\\line", "\n")
+    text = re.sub(r"\\par(?![A-Za-z])", "\n\n", text)
+    text = re.sub(r"\\line(?![A-Za-z])", "\n", text)
     text = text.replace("\\tab", "\t")
     text = re.sub(r"\\'([0-9a-fA-F]{2})",
                   lambda m: bytes([int(m.group(1), 16)]).decode(charset, "replace"),
@@ -781,7 +782,7 @@ def main() -> int:
         if args.json:
             print(json.dumps(payload, ensure_ascii=False, indent=2))
         else:
-            print(f"MarkItDown：{md_version or '未安装（非隔离模式下可用）'}")
+            print(f"MarkItDown：{md_version or '未检测到（若已安装，请去掉 -I 运行）'}")
             print(f"{'扩展名':<10}{'可用':<6}说明")
             for row in formats:
                 mark = "是" if row["available"] else "否"

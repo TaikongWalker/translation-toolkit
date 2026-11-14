@@ -72,6 +72,6 @@ python ..\..\scripts\backmatter.py --project .
 ## 环境注意
 
 - PowerShell 5.1 读取无 BOM 的 UTF-8 脚本会按 GBK 解码，导致中文注释破坏语法。**修改 `scripts/*.ps1` 后必须保存为 UTF-8 with BOM**。
-- Python 脚本用标准库，运行时建议 `python -I`；需要第三方库（如 PyMuPDF 预览）时用非隔离模式。
+- Python 脚本以标准库为主；PDF/HTML 抽取可选 MarkItDown、PyMuPDF，需用非隔离模式（不要加 `-I`）。
 - 编译必须 XeLaTeX；不要用 pdfLaTeX。
 - 系统 Noto SC 是可变字体，xdvipdfmx 无法嵌入；正文用 SimSun/SimHei。
