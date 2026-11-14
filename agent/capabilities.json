@@ -1,6 +1,6 @@
 {
   "name": "translation-toolkit",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Agent-facing contract for the translation toolkit. Human docs live in docs/; this file is the machine-readable index.",
   "entrypoints": {
     "status": {
@@ -33,6 +33,17 @@
       "command": "python scripts/term_candidates.py --project <project> --json",
       "purpose": "Extract term candidates from source/*.md.",
       "reads": ["source/*.md"]
+    },
+    "extract": {
+      "command": "python scripts/extract.py --input <file> --out <project>/source --json",
+      "purpose": "Unified source extraction for EPUB, PDF, TXT, Markdown, HTML, DOCX, ODT, RTF, FB2, MOBI/AZW3.",
+      "engines": {
+        "auto": "MarkItDown for PDF/HTML when available; native for EPUB/DOCX/ODT/RTF/FB2",
+        "markitdown": "force MarkItDown",
+        "native": "force built-in extractors"
+      },
+      "list_formats": "python scripts/extract.py --list-formats --json",
+      "writes": ["source/*.md", "source/frontmatter/*.md", "source/manifest.csv"]
     },
     "style": {
       "command": "python scripts/style.py --list|--show <id>|--apply <id> --project <project> --json",

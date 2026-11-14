@@ -1,0 +1,10 @@
+# 可选依赖（核心脚本仅用标准库）
+# 安装：pip install -r requirements-optional.txt
+#
+# PDF / HTML 的首选抽取后端
+markitdown>=0.1.9
+
+# PDF 备选后端（MarkItDown 不可用时）
+# pymupdf>=1.24
+
+# MOBI / AZW3 需要外部程序 Calibre（含 ebook-convert），不通过 pip 安装。

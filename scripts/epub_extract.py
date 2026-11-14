@@ -319,8 +319,10 @@ class ChapterConverter:
         return body
 
     def word_count(self) -> int:
-        return len(re.findall(r"[A-Za-z][A-Za-z'’\-]*",
-                              "\n".join(self.body_text)))
+        text = "\n".join(self.body_text)
+        latin = len(re.findall(r"[A-Za-z][A-Za-z'’\-]*", text))
+        cjk = len(re.findall(r"[㐀-䶿一-鿿]", text))
+        return latin + cjk
 
 
 # ----------------------------------------------------------------------

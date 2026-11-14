@@ -6,7 +6,7 @@
 
 ## 它能做什么
 
-- 从 EPUB / PDF / DOCX 抽取章节、图片与脚注为 Markdown，生成完整性清单
+- 从常见阅读文本格式抽取章节与清单：EPUB、PDF、TXT、Markdown、HTML、DOCX、ODT、RTF、FB2、MOBI/AZW3
 - 以 `glossary/terms.csv` 为唯一权威，检查术语一致性与禁用译名
 - 一个项目一本书：分章 `.tex`、自动生成目录与术语表、XeLaTeX 编译 PDF
 - 自动核对脚注数、图数、节数、TODO 残留、标点与数字
@@ -14,6 +14,30 @@
 - 项目模板 + 脚手架，几分钟内开始一本新书
 - **Agent native**：每个阶段都有 `--json` 命令、稳定退出码与机器契约（`AGENTS.md`、`agent/capabilities.json`）
 - **思维阁**：可选择译者文风档位，作为可执行的约束而非模仿（`styles/`）
+
+## 源文件格式
+
+`scripts/extract.py` 是统一抽取入口，按扩展名自动选择后端，输出格式与 EPUB 抽取一致（`source/*.md` + `manifest.csv`）。
+
+| 格式 | 后端 | 说明 |
+|---|---|---|
+| `.epub` | 内置 | 保留章节、脚注、图片、表格，效果最好 |
+| `.pdf` | MarkItDown → pdftotext → PyMuPDF | 三者取其一；扫描版需先 OCR；不保留脚注编号与图片 |
+| `.docx` | 内置 / MarkItDown | 内置保留标题样式与脚注位置 |
+| `.txt` `.text` `.md` `.markdown` | 内置 | 按 Markdown 标题、`第一章 / Chapter N` 或空行切分 |
+| `.html` `.htm` `.xhtml` | MarkItDown / 内置 | 保留标题与段落 |
+| `.odt` `.rtf` `.fb2` | 内置 | 基础转换；复杂排版与图片可能丢失 |
+| `.mobi` `.azw3` `.azw` | Calibre | 需 `ebook-convert`，先转 EPUB 再抽取 |
+
+可选依赖：
+
+```powershell
+pip install "markitdown>=0.1.9"     # PDF/HTML 首选后端
+# PDF 备选：安装 poppler（pdftotext）或 pip install pymupdf
+# MOBI/AZW3：安装 Calibre
+```
+
+> MarkItDown 装在用户 site-packages 时，请用普通模式运行 `python scripts/extract.py`，不要加 `-I`（`-I` 会禁用用户 site-packages）。可用 `--engine native` 强制使用内置后端，或用 `--list-formats` 查看当前可用性。
 
 ## 面向 agent
 
@@ -56,13 +80,13 @@ python scripts/style.py --apply plain-modern --project projects/my-book
 
 ## 快速开始
 
-环境：Windows + PowerShell 5.1+、TeX Live（XeLaTeX + latexmk）、Python 3.10+。Python 脚本仅用标准库。
+环境：Windows + PowerShell 5.1+、TeX Live（XeLaTeX + latexmk）、Python 3.10+。核心脚本仅用标准库；PDF/HTML 可选安装 MarkItDown。
 
 ```powershell
 git clone <this-repo> translation-toolkit
 cd translation-toolkit
 
-# 新建项目；若提供 -Source，会尝试自动抽取 EPUB
+# 新建项目；按扩展名自动抽取（EPUB/PDF/TXT/MD/HTML/DOCX/ODT/RTF/FB2/MOBI/AZW3）
 .\scripts\new-project.ps1 -Name my-book -Title "书名" -Source "D:\books\book.epub"
 
 cd projects\my-book
@@ -90,7 +114,8 @@ translation-toolkit/
 │  ├─ build.ps1              一键构建（-Json 输出单行 JSON）
 │  ├─ status.py              项目总状态（agent 首选入口）
 │  ├─ style.py               思维阁档位管理
-│  ├─ epub_extract.py        EPUB 抽取
+│  ├─ extract.py             统一原文抽取（多格式）
+│  ├─ epub_extract.py        EPUB 抽取后端
 │  ├─ scaffold.py            生成逐章 LaTeX 骨架
 │  ├─ prepare.py             元信息、章序、术语表
 │  ├─ backmatter.py          参考文献与索引

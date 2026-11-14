@@ -81,13 +81,15 @@ Set-Content -LiteralPath (Join-Path $target "glossary\terms.csv") `
 Set-Content -LiteralPath (Join-Path $target "notes\progress.csv") `
     -Value "unit,file,status,zh_chars,todo,updated,notes" -Encoding UTF8
 
-$code = Invoke-PythonStep -Label "Update project.json" -PythonArgs @(
+$initArgs = @(
     (Join-Path $scriptDir "init_project.py"),
     "--dir", $target, "--slug", $Name, "--title", $Title,
-    "--subtitle", $Subtitle, "--author", $Author,
-    "--translator", $Translator, "--source-lang", $SourceLang,
-    "--year", $Year
+    "--source-lang", $SourceLang, "--year", $Year
 )
+if ($Subtitle) { $initArgs += @("--subtitle", $Subtitle) }
+if ($Author) { $initArgs += @("--author", $Author) }
+if ($Translator) { $initArgs += @("--translator", $Translator) }
+$code = Invoke-PythonStep -Label "Update project.json" -PythonArgs $initArgs
 if ($code -ne 0) { exit $code }
 
 if ($Source) {
@@ -96,10 +98,15 @@ if ($Source) {
         exit 1
     }
     $ext = [IO.Path]::GetExtension($Source).ToLower()
-    if ($ext -eq ".epub") {
-        $code = Invoke-PythonStep -Label "Extract EPUB" -PythonArgs @(
-            (Join-Path $scriptDir "epub_extract.py"),
-            "--epub", $Source, "--out", (Join-Path $target "source"), "--clean"
+    $extractExts = @(
+        ".epub", ".pdf", ".txt", ".text", ".md", ".markdown",
+        ".html", ".htm", ".xhtml", ".docx", ".odt", ".rtf", ".fb2",
+        ".mobi", ".azw3", ".azw"
+    )
+    if ($extractExts -contains $ext) {
+        $code = Invoke-PythonStep -Label "Extract source ($ext)" -PythonArgs @(
+            (Join-Path $scriptDir "extract.py"),
+            "--input", $Source, "--out", (Join-Path $target "source"), "--clean"
         )
         if ($code -eq 0) {
             $code = Invoke-PythonStep -Label "Scaffold chapter files" -PythonArgs @(
@@ -107,7 +114,7 @@ if ($Source) {
             )
         }
     } else {
-        Write-Host "[INFO] Non-EPUB source: copying to source/ (follow docs/01-工作流.md stage 0)." -ForegroundColor Yellow
+        Write-Host "[WARN] Unsupported source format '$ext'. Copied to source/; convert it to TXT/DOCX/EPUB first (see docs/01-工作流.md stage 0)." -ForegroundColor Yellow
         Copy-Item -LiteralPath $Source -Destination (Join-Path $target "source") -Force
     }
 }

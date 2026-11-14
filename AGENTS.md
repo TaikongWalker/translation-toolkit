@@ -32,9 +32,23 @@ python scripts/status.py --project projects/my-book --json
 | `backmatter.py --project <p> --json` | 生成参考文献/索引 | `generated[]` `bibliography` `index` |
 | `term_candidates.py --project <p> --json` | 提取术语候选 | `candidate_count` `candidates[]` |
 | `style.py --list\|--show\|--apply --json` | 思维阁文风档位 | `profiles[]` / `profile` / `style_id` |
+| `extract.py --input <f> --out <p>/source --json` | 多格式原文抽取 | `format` `backend` `files` `units[]` `warnings[]` |
+| `extract.py --list-formats --json` | 后端可用性 | `engines` `formats[]` |
 | `build.ps1 -Project <p> -Json` | 构建 PDF | `ok` `pdf` `pages` `check{ok,error,warn,info}` |
 
 退出码：`0` 成功/无阻断；`1` 有阻断项、参数错误或文件不可读。不要把警告当成功，也不要把提示当错误。
+
+## 原文格式
+
+`extract.py` 统一处理 EPUB、PDF、TXT、Markdown、HTML、DOCX、ODT、RTF、FB2、MOBI/AZW3：
+
+- EPUB 用内置后端，保留脚注、图片与章节结构；
+- PDF/HTML 在 MarkItDown 可用时优先使用，否则回退 pdftotext/PyMuPDF 或内置解析；
+- DOCX/ODT/RTF/FB2 用内置后端，保留标题与脚注位置；
+- MOBI/AZW3 需要 Calibre 的 `ebook-convert`；
+- `--engine auto|markitdown|native` 可强制后端，`--list-formats --json` 查看可用性。
+
+MarkItDown 若装在用户 site-packages，运行 `extract.py` 时**不要加 `-I`**。
 
 ## 推荐工作循环
 
