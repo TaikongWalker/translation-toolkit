@@ -1,0 +1,50 @@
+% !TEX program = xelatex
+% ============================================================
+%  翻译项目总装入口
+%  编译：latexmk -xelatex（或运行 scripts/build.ps1）
+% ============================================================
+\documentclass[UTF8, fontset=none, twoside, openright, 11pt]{ctexbook}
+
+\input{generated/meta}      % 由 project.json 生成，勿手改
+\input{preamble}            % 版式与宏
+
+\begin{document}
+
+% ---------------- 前置部分 ----------------
+\frontmatter
+\pagestyle{empty}
+\input{frontmatter/cover}
+
+\newpage
+\thispagestyle{empty}
+\input{frontmatter/copyright}
+
+% 献词（若已翻译）
+\IfFileExists{frontmatter/dedication.tex}
+  {\cleardoublepage\input{frontmatter/dedication}}
+
+\cleardoublepage
+\pagestyle{fancy}
+\input{frontmatter/preface}
+
+% 致谢（若已翻译）
+\IfFileExists{frontmatter/acknowledgments.tex}
+  {\cleardoublepage\input{frontmatter/acknowledgments}}
+
+\cleardoublepage
+\tableofcontents
+\cleardoublepage
+\listoffigures
+
+% ---------------- 正文 ----------------
+\mainmatter
+\input{generated/chapters}   % 自动生成：chapters/*.tex 的自然排序列表
+
+% ---------------- 后置部分 ----------------
+\backmatter
+\input{backmatter/glossary}
+\IfFileExists{backmatter/bibliography.tex}{\input{backmatter/bibliography}}
+\IfFileExists{backmatter/index.tex}{\input{backmatter/index}}
+\input{backmatter/afterword}
+
+\end{document}

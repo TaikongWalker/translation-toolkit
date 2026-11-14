@@ -1,0 +1,31 @@
+% 封面：简洁排印式。如需图片封面，改为 \includegraphics[width=\paperwidth]{...}
+\begin{titlepage}
+\centering
+\vspace*{2.2cm}
+
+{\sffamily\bfseries\fontsize{30}{38}\selectfont \booktitle\par}
+
+\vspace{0.8cm}
+{\sffamily\large \booksubtitle\par}
+
+\vspace{1.4cm}
+{\itshape\normalsize \booktitleoriginal\par}
+\ifx\booksubtitleoriginal\empty\else
+  {\itshape\small \booksubtitleoriginal\par}
+\fi
+
+\vfill
+
+{\large \bookauthor\par}
+\vspace{0.25cm}
+{\small\itshape \bookauthororiginal\par}
+
+\vfill
+
+{\normalsize 译者　\booktranslator\par}
+\vspace{0.8cm}
+{\small \bookpublisher\par}
+{\small \bookyear\par}
+
+\vspace*{1.2cm}
+\end{titlepage}

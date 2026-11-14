@@ -1,0 +1,20 @@
+\chapter*{索引}
+\addcontentsline{toc}{chapter}{索引}
+\markboth{索引}{索引}
+
+\IfFileExists{generated/index.tex}
+  {%
+   \begingroup
+   \small
+   \setlength{\parindent}{0pt}
+   \begin{multicols}{2}
+   \input{generated/index}
+   \end{multicols}
+   \endgroup
+  }
+  {%
+   \begin{flushleft}
+   \small
+   尚无索引数据。将原文索引放入 \texttt{source/backmatter/index.md}，构建时会由 \texttt{scripts/backmatter.py} 自动生成。
+   \end{flushleft}
+  }

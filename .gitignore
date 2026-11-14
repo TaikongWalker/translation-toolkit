@@ -1,0 +1,48 @@
+# 用户项目（默认不进入仓库；如需版本管理，请自行确认内容版权）
+projects/
+
+# 构建产物
+*/build/
+*/dist/
+_template/build/
+_template/dist/
+
+# Python
+__pycache__/
+*.pyc
+
+# LaTeX 中间文件
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.xdv
+*.synctex.gz
+*.bbl
+*.blg
+
+# 临时预览 / 调试
+_preview*.png
+_*.png
+_inspect.txt
+_fonttest.*
+_latexmk_out.txt
+_build*.txt
+_build_err.txt
+_review*_build.txt
+_terms_*.txt
+
+# 电子书与原文（避免误提交受版权保护的内容）
+*.epub
+*.mobi
+*.azw3
+*.pdf
+
+# 系统
+Thumbs.db
+desktop.ini
+.DS_Store

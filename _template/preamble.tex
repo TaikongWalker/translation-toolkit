@@ -1,0 +1,243 @@
+% ============================================================
+%  翻译工作区 · 通用排版导言区
+%  引擎：XeLaTeX（必须）
+%  项目专用改动请写在 project.tex 或正文中，尽量不改本文件
+% ============================================================
+
+% ---------- 宏包 ----------
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{setspace}
+\usepackage{ragged2e}
+\usepackage{caption}
+\usepackage{tocloft}
+\usepackage{amsmath,amssymb}
+\usepackage{microtype}
+
+% ---------- 页面 ----------
+\geometry{
+  paperwidth=170mm,
+  paperheight=240mm,
+  top=25mm,
+  bottom=25mm,
+  inner=22mm,
+  outer=18mm,
+  headheight=14pt,
+  headsep=6mm,
+  footskip=12mm
+}
+
+% ---------- 字体 ----------
+% 西文：Palatino（正文），Consolas（等宽）
+\setmainfont{Palatino Linotype}[
+  BoldFont={Palatino Linotype Bold},
+  ItalicFont={Palatino Linotype Italic},
+  BoldItalicFont={Palatino Linotype Bold Italic}
+]
+\setsansfont{Segoe UI}
+\setmonofont{Consolas}[Scale=MatchLowercase]
+
+% 中文：Noto Serif SC（正文）、Noto Sans SC（标题/无衬线）、楷体、仿宋
+% 注：系统安装的 Noto SC 为可变字体（VF），xdvipdfmx 无法嵌入，
+% 故正文用宋体、标题用黑体；两者均为 Windows 自带、可稳定嵌入。
+% 如安装了静态版思源宋体/黑体，可改为 Source Han Serif SC / Source Han Sans SC。
+\setCJKmainfont{SimSun}[AutoFakeBold=1.5]
+\setCJKsansfont{SimHei}
+\setCJKmonofont{FangSong}
+\setCJKfamilyfont{zhsong}{SimSun}[AutoFakeBold=1.5]
+\setCJKfamilyfont{zhhei}{SimHei}
+\setCJKfamilyfont{zhkai}{KaiTi}
+\setCJKfamilyfont{zhfs}{FangSong}
+\providecommand{\songti}{}
+\providecommand{\heiti}{}
+\providecommand{\kaishu}{}
+\providecommand{\fangsong}{}
+\renewcommand{\songti}{\CJKfamily{zhsong}}
+\renewcommand{\heiti}{\CJKfamily{zhhei}}
+\renewcommand{\kaishu}{\CJKfamily{zhkai}}
+\renewcommand{\fangsong}{\CJKfamily{zhfs}}
+
+% ---------- 行距与段落 ----------
+\linespread{1.45}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0pt}
+\setlength{\emergencystretch}{2em}
+
+% ---------- 章节标题 ----------
+\ctexset{
+  chapter = {
+    format = \centering,
+    nameformat = \sffamily\large\bfseries,
+    numberformat = \sffamily\large\bfseries,
+    titleformat = \sffamily\LARGE\bfseries,
+    name = {第,章},
+    number = \chinese{chapter},
+    beforeskip = 20pt,
+    afterskip = 40pt
+  },
+  section = {
+    format = \sffamily\large\bfseries,
+    beforeskip = 1.4ex plus .3ex minus .2ex,
+    afterskip = .8ex plus .2ex
+  },
+  subsection = {
+    format = \sffamily\normalsize\bfseries,
+    beforeskip = 1.2ex plus .2ex minus .1ex,
+    afterskip = .6ex plus .1ex
+  }
+}
+% 章首不显示页眉线，章标题页使用 plain 样式
+\renewcommand{\chaptermark}[1]{\markboth{#1}{#1}}
+
+% 空白页不显示页眉页脚（book 类默认会给空白页加页眉）
+\makeatletter
+\renewcommand{\cleardoublepage}{%
+  \clearpage
+  \if@twoside
+    \ifodd\c@page\else
+      \hbox{}\thispagestyle{empty}\newpage
+      \if@twocolumn\hbox{}\newpage\fi
+    \fi
+  \fi}
+\makeatother
+
+% 目录、插图目录标题居中
+\renewcommand{\contentsname}{\hfill 目\quad 录\hfill}
+\renewcommand{\listfigurename}{\hfill 插图目录\hfill}
+
+% ---------- 页眉页脚 ----------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{\small\itshape\booktitle}
+\fancyhead[RO]{\small\itshape\leftmark}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \fancyfoot[C]{\small\thepage}%
+  \renewcommand{\headrulewidth}{0pt}%
+}
+
+% ---------- 脚注 ----------
+\usepackage[bottom,hang,flushmargin]{footmisc}
+\renewcommand{\footnotelayout}{\small}
+% 原书脚注每章从 1 开始，与原文编号对应
+\counterwithin*{footnote}{chapter}
+\setlength{\skip\footins}{1.1\baselineskip}
+
+% ---------- 引文 ----------
+% 短引文：随文引号；长引文：quote 环境（自动缩进 + 小字号）
+\renewenvironment{quote}
+  {\list{}{\leftmargin=2em\rightmargin=2em}\item[]\small\kaishu}
+  {\endlist}
+
+% 章首题词（题词正文译出，出处保留原文）
+% 用法：\begin{chapterquote}{——作者，\textit{书名}}
+%          ……题词……
+%       \end{chapterquote}
+\newenvironment{chapterquote}[1]
+  {\def\chapterquotesource{#1}\begin{quote}\kaishu\small}
+  {\par\vspace{0.8em}\hfill\upshape\small\chapterquotesource\end{quote}}
+
+% ---------- 表格 ----------
+\renewcommand{\arraystretch}{1.25}
+\setlength{\tabcolsep}{6pt}
+\captionsetup[table]{position=top}
+
+% ---------- 图注 ----------
+\captionsetup{
+  font=small,
+  labelfont=bf,
+  labelsep=quad,
+  skip=6pt
+}
+\graphicspath{{figures/}{source/images/}}
+
+% ---------- 列表 ----------
+\setlist[itemize]{leftmargin=2em,itemsep=0.2ex,topsep=0.4ex}
+\setlist[enumerate]{leftmargin=2em,itemsep=0.2ex,topsep=0.4ex}
+
+% ---------- 译者工具宏 ----------
+% 术语首次出现：中文（原文）
+% 用法：\term{述行性}{performativity}
+\newcommand{\term}[2]{#1（\textit{#2}）}
+
+% 仅保留原文（限定为西文斜体）
+\newcommand{\orig}[1]{\textit{#1}}
+
+% 译者注：独立编号（每章重新计数），不占用原书脚注编号。
+% 页脚显示“译者注1：……”，正文标记为“〔译注1〕”
+% 用法：\zhu{……}
+\newcounter{zhu}[chapter]
+\newcommand{\zhu}[1]{%
+  \stepcounter{zhu}%
+  \textsuperscript{〔译注\thezhu〕}%
+  \begingroup
+  \renewcommand{\thefootnote}{}%
+  \footnotetext{\textbf{译者注\thezhu：}#1}%
+  \endgroup}
+
+
+% 独立参考文献/原注中的书名等，避免过度排版
+\newcommand{\bookorig}[1]{\textit{#1}}
+
+% 待办标记：编译可见，终检前必须清零
+\newcommand{\todo}[1]{\textcolor{red}{【TODO：#1】}}
+
+% 译者按语（块级，带底纹）
+\usepackage[breakable]{tcolorbox}
+\newtcolorbox{transnote}[1][译者注]{
+  breakable,
+  colback=black!3,
+  colframe=black!35,
+  boxrule=0.4pt,
+  arc=1.5pt,
+  left=8pt,
+  right=8pt,
+  top=6pt,
+  bottom=6pt,
+  fonttitle=\small\sffamily\bfseries,
+  title={#1},
+  before skip=1.2ex,
+  after skip=1.2ex
+}
+
+% 图注来源行
+% 用法：\figsource{图片来源：某某出版社}
+\newcommand{\figsource}[1]{\par\vspace{0.3em}{\footnotesize #1\par}}
+
+% ---------- 目录 ----------
+\renewcommand{\cftchapfont}{\sffamily\bfseries}
+\renewcommand{\cftchappagefont}{\sffamily}
+\setlength{\cftbeforechapskip}{0.6em}
+\setlength{\cftsecindent}{2em}
+
+% ---------- 超链接与 PDF 元数据 ----------
+\usepackage[
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=blue!45!black,
+  bookmarksnumbered=true,
+  bookmarksopen=true,
+  pdfencoding=auto
+]{hyperref}
+\hypersetup{
+  pdftitle={\booktitle},
+  pdfauthor={\bookauthor},
+  pdfsubject={\booktitleoriginal},
+  pdfkeywords={\bookkeywords},
+  pdfcreator={XeLaTeX}
+}
+
+% ---------- 其他 ----------

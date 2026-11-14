@@ -1,0 +1,20 @@
+{
+  "slug": "template",
+  "title": "中文书名",
+  "subtitle": "中文副题（可留空）",
+  "title_original": "Original Title",
+  "subtitle_original": "Original Subtitle",
+  "author": "作者中文名",
+  "author_original": "Author Name",
+  "translator": "（译者姓名）",
+  "series": "",
+  "publisher": "",
+  "original_publisher": "",
+  "original_year": "",
+  "year": "2026",
+  "version": "0.1",
+  "source_lang": "en",
+  "target_lang": "zh-CN",
+  "rights": "待确认",
+  "keywords": "翻译; 书籍"
+}

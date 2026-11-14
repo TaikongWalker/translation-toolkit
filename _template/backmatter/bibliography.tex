@@ -1,0 +1,21 @@
+\chapter*{参考文献}
+\addcontentsline{toc}{chapter}{参考文献}
+\markboth{参考文献}{参考文献}
+
+\IfFileExists{generated/bibliography.tex}
+  {%
+   \begingroup
+   \small
+   \setlength{\parindent}{0pt}
+   \setlength{\parskip}{0.35em}
+   \raggedright
+   \sloppy
+   \input{generated/bibliography}
+   \endgroup
+  }
+  {%
+   \begin{flushleft}
+   \small
+   尚无参考文献数据。将原文参考文献放入 \texttt{source/backmatter/bibliography.md}，构建时会由 \texttt{scripts/backmatter.py} 自动生成。
+   \end{flushleft}
+  }
