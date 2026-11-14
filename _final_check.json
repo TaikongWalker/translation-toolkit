@@ -1,0 +1,886 @@
+{
+  "project": {
+    "title": "一切皆永恒，直到不复存在",
+    "path": "D:\\Projects\\翻译\\projects\\everything-was-forever",
+    "slug": "everything-was-forever"
+  },
+  "terms": 212,
+  "summary": {
+    "error": 0,
+    "warn": 23,
+    "info": 120
+  },
+  "counts": {
+    "A1": 119,
+    "A3": 1,
+    "A9": 23
+  },
+  "issues": [
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「Soviet」在译文中残留 1 次：…惧、被剥夺了一切智识主动性，‘苏联人’（Homo Sovieticus）充其量只能是党的观念与口号的…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「perestroika」在译文中残留 2 次：…4）。直到 1986 年、1987 年前后，改革（perestroika，意为“重建”）启动之后，社…；…时，却又显得并不令人意外。  1985 年，改革（perestroika）与公开性（glasnost…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「glasnost」在译文中残留 1 次：…85 年，改革（perestroika）与公开性（glasnost’，即开放、公开讨论）政策出台时，…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「anekdot」在译文中残留 1 次：…0、80 年代出现的反讽美学、荒诞幽默、俄式笑话（anekdoty）与荒诞主义恶作剧；它们成为日常生…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「obshchenie」在译文中残留 1 次：…些圈层建立在朋友网络、共同的智识追求以及“交往”（obshchenie，无尽的交谈、互动与“与他人共…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「anekdoty」在译文中残留 1 次：…0、80 年代出现的反讽美学、荒诞幽默、俄式笑话（anekdoty）与荒诞主义恶作剧；它们成为日常生…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「Iunost’」在译文中残留 2 次：…不久之后，全书出版。，它刚发表在文学杂志《青年》（Iunost’）上。我根本无法想象，哪怕只是稍稍类…；…yi Mir）、《旗》（Znamia）、《青年》（Iunost’）。大家都尽量订阅不同的杂志，好跟朋…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「Ogonek」在译文中残留 1 次：…、1988 年前后：“对我来说，改革是从《星火》（Ogonek）《星火》周刊是改革时期最受欢迎的声音…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「Oktiabr’」在译文中残留 1 次：…’（tolstye zhurnaly）：《十月》（Oktiabr’）、《我们的同时代人》（Nash …"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「Nash Sovremennik」在译文中残留 1 次：…《十月》（Oktiabr’）、《我们的同时代人》（Nash Sovremennik）、《新世界》（N…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「Novyi Mir」在译文中残留 1 次：…（Nash Sovremennik）、《新世界》（Novyi Mir）、《旗》（Znamia）、《青…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「Znamia」在译文中残留 1 次：…ik）、《新世界》（Novyi Mir）、《旗》（Znamia）、《青年》（Iunost’）。大家都…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「Argumenty i fakty」在译文中残留 1 次：…期间，日报的发行量率先增长。例如，《论据与事实》（Argumenty i fakty）的发行量在 1…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「Mashina Vremeni」在译文中残留 1 次：…乐人安德烈·马卡列维奇俄罗斯摇滚乐队“时间机器”（Mashina Vremeni）的主唱。在 199…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「ChK」在译文中残留 2 次：…能发表；六十年后，改革时期才披露，那场阴谋是契卡（ChK，克格勃的前身）捏造的（Volkov 199…；…5）；Gardiner（1992，73）；Hirschkop（1997，59–60）；Kristev…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「tolstye zhurnaly」在译文中残留 1 次：…朋友卡佳开始订阅文学月刊，也就是所谓的‘厚杂志’（tolstye zhurnaly）：《十月》（Ok…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「perelom soznania」在译文中残留 2 次：…在发生。许多人说到，自己经历了突然的“意识断裂”（perelom soznania）和“极度震惊”（…；…正在我周围发生。那令人震惊。我经历了一次意识断裂（perelom soznania）。然后是弗拉基米…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「vechnoe gosudarstvo」在译文中残留 1 次：…苏联公民一样，一直觉得自己生活在一个“永恒国家”（vechnoe gosudarstvo）之中（20…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「ideological enunciation」在译文中残留 1 次：…代性意识形态中的普遍悖论的一个版本：意识形态表述（ideological enunciation，反…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「ideological rule」在译文中残留 1 次：…iation，反映启蒙的理论理想）与意识形态统治（ideological rule，体现为现代国家政…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「samizdat」在译文中残留 2 次：…、1970 年代写成第二部分，多年来以萨米兹达特（samizdat，地下出版）形式流传。该书在苏联首…；…西；真正的文本只能发表在非官方出版物（萨米兹达特，samizdat）或境外出版物（塔米兹达特，tam…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「tamizdat」在译文中残留 1 次：…达特，samizdat）或境外出版物（塔米兹达特，tamizdat）上”（1998）。乌瓦罗娃和罗戈…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「zastoi」在译文中残留 3 次：…晚期与改革之后回溯建构出来的。  此外，“停滞”（zastoi）一词作为勃列日涅夫统治时期的标签十分…；…”（ottepel’）与勃列日涅夫时期的“停滞”（zastoi）。1968 年夏天苏联对捷克斯洛伐克…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「shestidesiatniki」在译文中残留 1 次：…个时期大致对应两代人——有时被称为“六十年代人”（shestidesiatniki，以其成长的关键十…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「deti zastoia」在译文中残留 1 次：…娃所指出的，这一代人——她称之为“停滞的孩子们”（deti zastoia）——与前后几代人不同，没…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「komsorg」在译文中残留 1 次：…二十五人）定期举行共青团会议，会上“共青团组织者（komsorg，会议召集人）常常提议：‘也许我们就…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「heteronymous shift」在译文中残留 1 次：…—称为。我在别处把话语的这一转移理论化为异名转向（heteronymous shift）（Yurch…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「transduction」在译文中残留 1 次：…格，以及城市时间与空间的总体组织）。关于“转导”（transduction，文本形式的复制），见 U…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「situatedness」在译文中残留 1 次：…苏联社会主义的许多批判性知识具有特定的“情境性”（situatedness，Haraway 1991…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「Homo Sovieticus」在译文中残留 1 次：…育，充满恐惧、被剥夺了一切智识主动性，‘苏联人’（Homo Sovieticus）充其量只能是党的观…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「Narkompros」在译文中残留 1 次：…的所有组织“有绝对义务把自己视为”教育人民委员部（Narkompros）组织的“严格附属机构”（Ar…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「cohort」在译文中残留 1 次：…985）强调对代际的两种不同理解：作为“同期群”（cohort）与作为“世系”（lineage）。“…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch01.tex",
+      "message": "原文术语「lineage」在译文中残留 1 次：…解：作为“同期群”（cohort）与作为“世系”（lineage）。“同期群”强调年龄差异，假定同龄…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch02.tex",
+      "message": "原文术语「CPSU」在译文中残留 1 次：…上”提出批评，“必要时向上级党组织直至苏联共产党（CPSU）中央委员会反映”，是“编辑的职责”；但始…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch02.tex",
+      "message": "原文术语「Leningrad」在译文中残留 1 次：…高地举起苏联体育的旗帜！”（Sportsmeny Leningrada, vyshe znamia …"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch02.tex",
+      "message": "原文术语「Znamia」在译文中残留 1 次：…tsmeny Leningrada, vyshe znamia sovetskogo sporta!…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch02.tex",
+      "message": "原文术语「ChK」在译文中残留 2 次：…而这些语境由相互对抗的阶级意识形态所占据（Kriuchkova 1982，30–31）。作者主张，苏…；…你能听到有人说：‘我刚画完一个五号（piaterochku）。’还有两幅列宁写作的图像：‘列宁在办公…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch02.tex",
+      "message": "原文术语「Narkompros」在译文中残留 1 次：…家机构和政治概念。典型的例子包括：教育人民委员部（Narkompros，即 Narodnyi kom…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch02.tex",
+      "message": "原文术语「raikom」在译文中残留 1 次：…不准备改动文本。当工作室首席艺术家去地方党委区委（raikom）请求批准修改时，没有一位书记愿意批准…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch02.tex",
+      "message": "原文术语「gorkom」在译文中残留 1 次：…他们私下都同意这是个错误——因为这一表述出自市委（gorkom）。在这些地方层级上，复制既有语言形式…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch02.tex",
+      "message": "原文术语「peredovitsa」在译文中残留 1 次：…，几乎完全以权威文类写成。在头版文本中，每日社论（peredovitsa）占据特殊地位。它由中央委员…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch02.tex",
+      "message": "原文术语「Kinokhronika」在译文中残留 1 次：…地区纪录片制片厂定期制作关于本地区时事的新闻简报（Kinokhronika）。从 1960 年代末起…"
+    },
+    {
+      "code": "A9",
+      "severity": "WARN",
+      "where": "chapters\\ch02.tex",
+      "message": "疑似未翻译的英文（连续 18 词）：ikh bogateishii kollektivnyi opyt i politicheskii razum s iskliuchitel’noi polnotoi proiav…"
+    },
+    {
+      "code": "A9",
+      "severity": "WARN",
+      "where": "chapters\\ch02.tex",
+      "message": "疑似未翻译的英文（连续 18 词）：v povsednevnykh budniakh kommunisticheskogo stroitel’stva raskryvaetsia pered mirom vo vse…"
+    },
+    {
+      "code": "A9",
+      "severity": "WARN",
+      "where": "chapters\\ch02.tex",
+      "message": "疑似未翻译的英文（连续 12 词）：Interesy kommunisticheskogo stroitel’stva i formirovaniia novogo cheloveka trebuiut dal’ne…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch03.tex",
+      "message": "原文术语「Komsomol」在译文中残留 10 次：…尔斯泰之类的东西。那是他烂熟于心的共青团—党语言（komsomol’sko-partiinyi ia…；…话Odna iz glavnykh zadach komsomola—ideino-politich…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch03.tex",
+      "message": "原文术语「vnye」在译文中残留 1 次：…（khoroshie, umnye i dushevnye）”的人组成的庞大共同体；后者内部有一个由…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch03.tex",
+      "message": "原文术语「svoi」在译文中残留 5 次：…的文化生产——这些人在日常言语中称之为“自己人”（svoi）。发音为 svah-EE。“自己人”一词…；…区分，例如沃纳的描述：一种共同的苏联身份“我们”（svoi、nashi）由“与压迫性国家机器共处的共…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch03.tex",
+      "message": "原文术语「stiob」在译文中残留 1 次：…lsia）大家。”关于一种特定的晚期苏联反讽文类 stiob 的讨论，见第  章；那种反讽实际上正是…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch03.tex",
+      "message": "原文术语「anekdot」在译文中残留 3 次：…时常常感到恶心。也像大多数人一样，我讲过政治笑话（anekdoty）。指非常流行的笑话，不同的人在日…；…验，但不能拿列宁的。”尽管关于列宁的“政治”笑话（anekdoty）确实在苏联话语中流传，但它们不如…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch03.tex",
+      "message": "原文术语「anekdoty」在译文中残留 3 次：…时常常感到恶心。也像大多数人一样，我讲过政治笑话（anekdoty）。指非常流行的笑话，不同的人在日…；…验，但不能拿列宁的。”尽管关于列宁的“政治”笑话（anekdoty）确实在苏联话语中流传，但它们不如…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch03.tex",
+      "message": "原文术语「Oktiabr’」在译文中残留 1 次：…bochego klassa v Velikoi Oktiabr’skoi sotsialistic…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch03.tex",
+      "message": "原文术语「komsorg」在译文中残留 1 次：…人的工作——那数十万名“书记”和“共青团组织者”（komsorg）中的一部分，他们在组织层级的下层占…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch03.tex",
+      "message": "原文术语「public」在译文中残留 2 次：…起，苏联日常生活的公共领域日益重组为两个公共领域：publichnaia（本义的公共领域）与 pri…；…hnaia（本义的公共领域）与 privatno-publichnaia（私人的公共领域）（1996…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch03.tex",
+      "message": "原文术语「raikom」在译文中残留 2 次：…青团组织者，到共青团委员会的委员和书记，再到区委（raikom）书记。  多数普通成员通过一套“任务…；…“自己人”才懂的暗语——“去区委”（uiti v Raikom）：“如果我们想在工作时间去画展或咖啡…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch03.tex",
+      "message": "原文术语「gorkom」在译文中残留 1 次：…的数字、事实、引语和关键词。这些清单大多来自市委（gorkom），有些则直接来自莫斯科的中央委员会。…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch03.tex",
+      "message": "原文术语「apparat」在译文中残留 2 次：…民（prostye liudi）的党和作为党机关（apparat）的党区分开来。”前者是一个由“努力…；…同体；后者内部有一个由“区委和市委层面的机关干部（apparatchiki）”组成的停滞官僚群体，他…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch03.tex",
+      "message": "原文术语「dissidents」在译文中残留 1 次：…。他沉默寡言，但像个异见者（tikhii, no dissidentstvuiushchii）。我们…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch03.tex",
+      "message": "原文术语「aktivist」在译文中残留 2 次：…尤其是把他们与另外两类人区分开来时——他们称之为 aktivisty（积极分子）和 dissiden…；…个“真正的积极分子”（nastoiashchii aktivist）。这个年轻女子是柳芭所在学院的学…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch03.tex",
+      "message": "原文术语「peredovitsa」在译文中残留 1 次：…起来“像一篇报纸社论（kak gazetnaia peredovitsa）”；如果他像别人一样照着稿…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch03.tex",
+      "message": "原文术语「Laibach」在译文中残留 4 次：…    里外翻转的意识形态：伦理与诗学   ——“Laibach” 一切艺术都难逃政治操纵，唯有那说…；…出这种操纵之语言的艺术除外。“十项盟约”之第三条（Laibach 1983）。Laibach 是一支…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch03.tex",
+      "message": "原文术语「manifest intertextuality」在译文中残留 1 次：…显得反常，是因为这一话语具有深刻的“显性互文性”（manifest intertextuality）…"
+    },
+    {
+      "code": "A9",
+      "severity": "WARN",
+      "where": "chapters\\ch03.tex",
+      "message": "疑似未翻译的英文（连续 12 词）：Osnovnym sredstvom ee resheniia iavliaetsia vsesoiuznyi Leninskii zachet i sistema komsomo…"
+    },
+    {
+      "code": "A9",
+      "severity": "WARN",
+      "where": "chapters\\ch03.tex",
+      "message": "疑似未翻译的英文（连续 10 词）：Odnim iz vazhneishikh napravlenii raboty komsomola iavliaetsia ideino-politicheskoe vospit…"
+    },
+    {
+      "code": "A9",
+      "severity": "WARN",
+      "where": "chapters\\ch03.tex",
+      "message": "疑似未翻译的英文（连续 11 词）：vospitanie iunoshei i devushek v dukhe sovetskogo patriotizma i sotsialisticheskogo intern…"
+    },
+    {
+      "code": "A9",
+      "severity": "WARN",
+      "where": "chapters\\ch03.tex",
+      "message": "疑似未翻译的英文（连续 10 词）：vot perveishie zadachi stoiashchie pered ideologicheskim aktivom nashei komsomol’skoi orga…"
+    },
+    {
+      "code": "A9",
+      "severity": "WARN",
+      "where": "chapters\\ch03.tex",
+      "message": "疑似未翻译的英文（连续 16 词）：Osnovnymi sredstvami resheniia zadach ideino-politicheskogo vospitaniia molodezhi iavliaiu…"
+    },
+    {
+      "code": "A9",
+      "severity": "WARN",
+      "where": "chapters\\ch03.tex",
+      "message": "疑似未翻译的英文（连续 12 词）：Neprekhodiashchee znachenie pobedy rabochego klassa v Velikoi Oktiabr’skoi sotsialistiches…"
+    },
+    {
+      "code": "A9",
+      "severity": "WARN",
+      "where": "chapters\\ch03.tex",
+      "message": "疑似未翻译的英文（连续 17 词）：Sovetskie liudi v edinom trudovom poryve vstrechaiut godovshchinu Velikogo Oktiabria novym…"
+    },
+    {
+      "code": "A9",
+      "severity": "WARN",
+      "where": "chapters\\ch03.tex",
+      "message": "疑似未翻译的英文（连续 11 词）：kak ia nenavidel eti komsomol’skie sobraniia za beskonechnyi formalizm i skukatu…"
+    },
+    {
+      "code": "A9",
+      "severity": "WARN",
+      "where": "chapters\\ch03.tex",
+      "message": "疑似未翻译的英文（连续 15 词）：Review Certificate of the Komsomol Organization of the All-Union Scientific Research and D…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch04.tex",
+      "message": "原文术语「vnye」在译文中残留 41 次：…与事件极度无知的描述，恰好呈现了这种奇特关系。我用vnye（外位）这一术语来指称这种与现实的关系。v…；…用vnye（外位）这一术语来指称这种与现实的关系。vnye（俄语 вне）字面意为“在外”。尤尔恰克…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch04.tex",
+      "message": "原文术语「svoi」在译文中残留 22 次：…三章已描述过这一点。和那些共青团员一样，伊娜也使用svoi（自己人）一词。例如，她解释说：“我们不把…；…人）一词。例如，她解释说：“我们不把索尔仁尼琴当作svoi〔ne schitali ego svoi…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch04.tex",
+      "message": "原文术语「obshchenie」在译文中残留 31 次：…。在这里总能找到人说话。你到西贡来，肯定能找到人。Obshchenie〔交往、闲聊、共处〕是最重要的…；…及其他任何事进行非常长久而严肃的讨论”。  交往（obshchenie）  所有这些圈层，从被国家制…"
+    },
+    {
+      "code": "A3",
+      "severity": "INFO",
+      "where": "chapters\\ch04.tex",
+      "message": "术语「stilyagi → 风格青年」未在本章出现"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch04.tex",
+      "message": "原文术语「tusovka」在译文中残留 11 次：…种圈层内的互动而拥有某种共同兴趣。Tusovki（tusovka 的复数）来自动词 tosovat’…；… 1970 年代末和 1980 年代初也构成了一个tusovka；他们坚称自己对政治同样“不感兴趣”…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch04.tex",
+      "message": "原文术语「Pravda」在译文中残留 2 次：…时，摇滚乐手会区分俄语中两个表示“真理”的概念——pravda 与 istina——这与本章前面讨论…；…达，视为关于人类处境的基本真理的体现”，而对探寻 pravda 所隐含的政治立场则完全不感兴趣（Cu…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch04.tex",
+      "message": "原文术语「ChK」在译文中残留 1 次：…、和朋友喝上一瓶（razdavit’ butylochku）的人，从来不会被认为是罪犯或坏人，不管社…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch04.tex",
+      "message": "原文术语「samizdat」在译文中残留 1 次：…们关注异见话语（比如她读过索尔仁尼琴的萨米兹达特（samizdat，地下出版）作品和境外出版物），这…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch04.tex",
+      "message": "原文术语「shestidesiatniki」在译文中残留 1 次：…模型  作家谢尔盖·多夫拉托夫写过“六十年代人”（shestidesiatniki）“六十年代人”一…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch04.tex",
+      "message": "原文术语「fartsovshchik」在译文中残留 2 次：…年长的知识分子。同样这种对金钱的不安态度，转化为对fartsovshchiki（倒卖西方货的黑市贩子…；…术家群体，然后是吸毒者群体，然后是黑市贩子和卖鞋的fartsovshchiki〔从西方游客那里买衣服…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch04.tex",
+      "message": "原文术语「neinteresno」在译文中残留 3 次：…者。每个人都明白一切，那还有什么好说的。那没意思〔neinteresno〕。”着重号为引者所加。另可…；…权威仪式与文本；相反，他们觉得投入那一话语没意思（neinteresno）。把某事视为没意思，与身处…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch04.tex",
+      "message": "原文术语「kochegarka」在译文中残留 1 次：… 年）。亚历山大·弗洛连斯基摄。   “锅炉房”（kochegarka 或 kotel’naia）是…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch04.tex",
+      "message": "原文术语「Nikolai」在译文中残留 1 次：…中他们“呼吸着清冽的空气，而外面过着另一种生活”（Nikolai Gol’，转引自 Pudovkin…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch04.tex",
+      "message": "原文术语「Derzanie」在译文中残留 1 次：…文学俱乐部“勇气”  少年宫的文学俱乐部“勇气”（Derzanie，意为“敢于”）面向对创作与诗歌感…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch04.tex",
+      "message": "原文术语「vnutrenniaia emigratsiia」在译文中残留 1 次：…类生活中较为极端的例子，有时被描述为“内部流亡”（vnutrenniaia emigratsiia）…"
+    },
+    {
+      "code": "A9",
+      "severity": "WARN",
+      "where": "chapters\\ch04.tex",
+      "message": "疑似未翻译的英文（连续 9 词）：Vazhno bylo poniat’ gde my na samom dele nakhodimsia…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch05.tex",
+      "message": "原文术语「vnye」在译文中残留 1 次：…；第  章聚焦于生活在苏联制度时间与空间“外位”（vnye，里—外）之中的紧密圈层。本章进入更广阔的…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch05.tex",
+      "message": "原文术语「stiob」在译文中残留 1 次：…联日常种种荒诞之处的透明反讽变得普遍。关于斯乔布（stiob）及其他半开玩笑文类的反讽，见第  章。…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch05.tex",
+      "message": "原文术语「stilyagi」在译文中残留 1 次：…一个例子是国家对穿着时髦的青年亚文化“风格青年”（stilyagi，源自 stil’，即“风格”）的…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch05.tex",
+      "message": "原文术语「tusovka」在译文中残留 1 次：…另一方面，这促成了一个紧张而相对独立的摇滚乐圈子（tusovka）的生产（关于这一术语的讨论，见第 …"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch05.tex",
+      "message": "原文术语「samizdat」在译文中残留 1 次：… magnitofon（磁带录音机）而来，并类比 samizdat 和 roentgenizdat（…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch05.tex",
+      "message": "原文术语「Slavoj Žižek」在译文中残留 1 次：…79 年影片《潜行者》（Stalker）（转引自 Slavoj Žižek 1999）。   国外 …"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch05.tex",
+      "message": "原文术语「public」在译文中残留 1 次：…The Andropov Hoax”，New Republic，1983 年 2 月 7 日。  康…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch05.tex",
+      "message": "原文术语「fartsovshchik」在译文中残留 2 次：…费尽心机。我周围大多数人都这样。很少有人亲自认识 fartsovshchiki〔外国衣服和商品的黑市…；…质主义和贪婪的联系，使德米特里的许多同龄人在遇到 fartsovshchiki 时感到强烈不适，并使…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch05.tex",
+      "message": "原文术语「leibl」在译文中残留 5 次：…佩戴在衣服和个人物品上的实物标记，青年俚语称之为 leibl，来自英语“label”，即标签或品牌名…；…eibl，来自英语“label”，即标签或品牌名。Leibl 有各种化身，从真正的西方标签，到仿制品…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch05.tex",
+      "message": "原文术语「roentgenizdat」在译文中残留 2 次：…滚”（rok na rebrakh）。它也被称为 roentgenizdat，源自俄语中 X 射线一…；…（磁带录音机）而来，并类比 samizdat 和 roentgenizdat（见上文注 45）。  …"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch05.tex",
+      "message": "原文术语「magnitizdat」在译文中残留 1 次：…这些磁带专辑在全国流传；其生产方式在俚语中被称为 magnitizdat〔磁带出版〕。由俄语词 ma…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch05.tex",
+      "message": "原文术语「Krugozor」在译文中残留 1 次：…。关于 20 世纪 70 年代的音乐系列《环视》（Krugozor），见 McMichael（200…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch05.tex",
+      "message": "原文术语「The Beatles」在译文中残留 1 次：…了两个词——TXE BEATлE3——这是对英文“the Beatles”的戏谑、非标准西里尔字母转…"
+    },
+    {
+      "code": "A9",
+      "severity": "WARN",
+      "where": "chapters\\ch05.tex",
+      "message": "疑似未翻译的英文（连续 9 词）：Rwandan Genocide and the International Law of Radio Jamming…"
+    },
+    {
+      "code": "A9",
+      "severity": "WARN",
+      "where": "chapters\\ch05.tex",
+      "message": "疑似未翻译的英文（连续 8 词）：Disc Bootleggers Are Waxing Fat on Stolen Goods…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch06.tex",
+      "message": "原文术语「Komsomol」在译文中残留 2 次：…shikh napravlenii raboty komsomola iavliaetsia ide…；…gicheskim aktivom nashei komsomol’skoi organizatsi…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch06.tex",
+      "message": "原文术语「vnye」在译文中残留 3 次：…生活。这种有意义的生活可以位于想象世界和“外位”（vnye）的世界中，如第 、 章所述，但也可以位于…；…第  章）之类的人截然不同——后者坚持生活在外位（vnye），尽量避开共青团，甚至拒绝思考共青团是否…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch06.tex",
+      "message": "原文术语「stilyagi」在译文中残留 1 次：…，例如前面提到的穿着时髦的青年亚文化“风格青年”（stilyagi），讽刺文章和漫画把他们描绘成不道…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch06.tex",
+      "message": "原文术语「tusovka」在译文中残留 1 次：…多音乐知识。他解释说：“我们有一个真正的音乐圈子（tusovka）……那是齐柏林飞艇的时代。了不起的…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch06.tex",
+      "message": "原文术语「Mashina Vremeni」在译文中残留 1 次：…Mify）、地球人（Zemliane）、时间机器（Mashina Vremeni）、绿蚂蚁（Zele…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch06.tex",
+      "message": "原文术语「barakholka」在译文中残留 1 次：…，学生每月助学金为 40 卢布）：   我们黑市（barakholka）上的唱片相当贵。例如，专辑《…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch06.tex",
+      "message": "原文术语「kooperativ」在译文中残留 1 次：…（一种在苏联青年中流行的西方牛仔裤品牌），合作社（Kooperativ）变成开胃酒（aperitiv…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch06.tex",
+      "message": "原文术语「raikom」在译文中残留 1 次：…括在 80 年代初向地方市委员会和区共青团委员会（raikom）发送中央委员会指示，要求它们加强对本…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch06.tex",
+      "message": "原文术语「obkom」在译文中残留 1 次：…，1985 年 1 月由乌克兰尼古拉耶夫州的州委（Obkom）发给该州各市、区委员会（见图  和 ）…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch06.tex",
+      "message": "原文术语「estrada」在译文中残留 1 次：…看，摇滚乐已经向前迈出了一大步。这不再是流行音乐（estrada）。它比流行音乐高得多、深得多、有力…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch06.tex",
+      "message": "原文术语「AVIA」在译文中残留 1 次：…队“奇怪的游戏”（Strannye Igry）和 AVIA 的领袖尼古拉·古谢夫在 80 年代描述自…"
+    },
+    {
+      "code": "A9",
+      "severity": "WARN",
+      "where": "chapters\\ch06.tex",
+      "message": "疑似未翻译的英文（连续 8 词）：Pered stenoi okazalas’ segodnia populiarnaia muzyka na zapade…"
+    },
+    {
+      "code": "A9",
+      "severity": "WARN",
+      "where": "chapters\\ch06.tex",
+      "message": "疑似未翻译的英文（连续 10 词）：Odnim iz vazhneishikh napravlenii raboty komsomola iavliaetsia ideino-politicheskoe vospit…"
+    },
+    {
+      "code": "A9",
+      "severity": "WARN",
+      "where": "chapters\\ch06.tex",
+      "message": "疑似未翻译的英文（连续 11 词）：vospitanie iunoshei i devushek v dukhe sovetskogo patriotizma i sotsialisticheskogo intern…"
+    },
+    {
+      "code": "A9",
+      "severity": "WARN",
+      "where": "chapters\\ch06.tex",
+      "message": "疑似未翻译的英文（连续 10 词）：vot perveishie zadachi stoiashchie pered ideologicheskim aktivom nashei komsomol’skoi orga…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch07.tex",
+      "message": "原文术语「vnye」在译文中残留 7 次：…在变成一项审美工程，以怪诞的方式实践生活，置身于（vnye）体制的社会政治关切之内／之外。外位（вн…；…赛得以表述的那个话语场之内——他处在那个场的外位（vnye）。难怪米特基的座右铭是：“米特基不想打败…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch07.tex",
+      "message": "原文术语「svoi」在译文中残留 6 次：…名字还有更多含义——它指向某种亲属想象，即自己人（svoi）各圈层中常见的亲属隐喻。回想第  章讨论…；…以“小兄弟”“小妹妹”称呼他人的方式，构成了一种 svoi 的亲属公众：它既不以家庭纽带为基础，也不…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch07.tex",
+      "message": "原文术语「stiob」在译文中残留 48 次：…指米特基和死亡现实主义者这类团体所实践的反讽美学。stiob 是一种特殊的反讽，不同于讽刺、玩世不恭…；…不恭、嘲弄，或任何更常见的荒诞幽默文类。它要求对 stiob 所指向的对象、人或观念达到某种程度的过…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch07.tex",
+      "message": "原文术语「anekdot」在译文中残留 2 次：…俄式笑话。这种仪式被称为“放线”（travit’ anekdoty），仿佛它们被绕在线轴上放出来。那…；…内战争英雄恰巴耶夫指挥官的庞大而受欢迎的系列笑话（anekdoty pro Chapaeva），是在…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch07.tex",
+      "message": "原文术语「obshchenie」在译文中残留 1 次：…时间和精力用于集体饮酒、画画、无休无止的“交往”（obshchenie），用于不断扮演那种浑然不觉、…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch07.tex",
+      "message": "原文术语「anekdoty」在译文中残留 2 次：…俄式笑话。这种仪式被称为“放线”（travit’ anekdoty），仿佛它们被绕在线轴上放出来。那…；…内战争英雄恰巴耶夫指挥官的庞大而受欢迎的系列笑话（anekdoty pro Chapaeva），是在…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch07.tex",
+      "message": "原文术语「stilyagi」在译文中残留 2 次：…“苏联人民”与“人民公敌”的划分，到象征性地否定 stilyagi 之类文化“偏离者”的生命（例如 …；……可以说，在生活的表面之上扑腾”见我在第  章对 stilyagi 的讨论。），再到勃列日涅夫对公民…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch07.tex",
+      "message": "原文术语「Pravda」在译文中残留 2 次：…po poshlostiam！这句话的意义建立在 pravda 一词的模棱两可之上——它既是一个意为…；…然而，她同时把它去语境化了。“打击”这个动词暗示 pravda 也被当作普通词语“真理”使用，而这又…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch07.tex",
+      "message": "原文术语「stishki-strashilki」在译文中残留 1 次：…类常见话语的一个例子，是一种被称为“吓人的小诗”（stishki-strashilki）的民间文类—…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch07.tex",
+      "message": "原文术语「Mitëk」在译文中残留 1 次：…的地点。按照这个团体自身的传说，一个真正的米秋克（Mitëk，米特基的单数形式，重音在末音节）从不了…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch07.tex",
+      "message": "原文术语「Laibach」在译文中残留 1 次：…体共有的一种美学。例如，斯洛文尼亚摇滚乐队莱巴赫（Laibach）和俄罗斯摇滚乐队 AVIA 的舞台…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch07.tex",
+      "message": "原文术语「AVIA」在译文中残留 7 次：…队“奇怪的游戏”（Strannye Igry）与 AVIA 的领军人物。转引自 Nikkila (2…；…摇滚乐队莱巴赫（Laibach）和俄罗斯摇滚乐队 AVIA 的舞台表演就运用了这种美学。莱巴赫过度认…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\ch07.tex",
+      "message": "原文术语「travit’ anekdoty」在译文中残留 1 次：…一轮无休无止地讲俄式笑话。这种仪式被称为“放线”（travit’ anekdoty），仿佛它们被绕在…"
+    },
+    {
+      "code": "A9",
+      "severity": "WARN",
+      "where": "chapters\\ch07.tex",
+      "message": "疑似未翻译的英文（连续 9 词）：krupneishii politicheskii i gosudarstvennyi deiatel’ sovremennosti Leonid Il’ich Brezhnev…"
+    },
+    {
+      "code": "A9",
+      "severity": "WARN",
+      "where": "chapters\\ch07.tex",
+      "message": "疑似未翻译的英文（连续 8 词）：Eta data vpisana krasnymi bukvami v nashem kalendare…"
+    },
+    {
+      "code": "A9",
+      "severity": "WARN",
+      "where": "chapters\\ch07.tex",
+      "message": "疑似未翻译的英文（连续 13 词）：raz k voprosu vliianiia paranoicheskogo genokokka na frazovuiu strukturu optimal’nogo zvuc…"
+    },
+    {
+      "code": "A9",
+      "severity": "WARN",
+      "where": "chapters\\ch07.tex",
+      "message": "疑似未翻译的英文（连续 8 词）：Vyrashchivanie volosianogo pokrova na litse v ekstremal’nykh uslaviiakh…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\conclusion.tex",
+      "message": "原文术语「vnye」在译文中残留 3 次：…公众一样，与权威话语有一种特殊关系，被界定为“处于vnye（外位）”——即占据一个同时在该话语修辞场…；…划分，成为一个生产新意义的动态场所。处于权威话语的vnye，成为晚期社会主义时期一种主导的生活模式；…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\conclusion.tex",
+      "message": "原文术语「svoi」在译文中残留 8 次：…。  共青团活动中这种文化生产的一个非意图后果，是svoi（“自己人”）或“正常人”公众的出现，第三…；…）或“正常人”公众的出现，第三章对此作了考察。虽然svoi在俄国是一个古老的概念，但在晚期社会主义语…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\conclusion.tex",
+      "message": "原文术语「stiob」在译文中残留 1 次：…代苏联人中促成了一种独特的荒诞反讽美学，俚语中称为stiob（斯乔布）。这种反讽形式所处理的，正是这…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\conclusion.tex",
+      "message": "原文术语「anekdot」在译文中残留 1 次：…即兴评论，到仪式化的诙谐叙事、艺术表演、恶作剧以及anekdoty（俄式笑话）。艺术家、共青团委员会…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\conclusion.tex",
+      "message": "原文术语「anekdoty」在译文中残留 1 次：…即兴评论，到仪式化的诙谐叙事、艺术表演、恶作剧以及anekdoty（俄式笑话）。艺术家、共青团委员会…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\conclusion.tex",
+      "message": "原文术语「perelom soznania」在译文中残留 1 次：…对生命意义的理解”，经历了一次深刻的“意识断裂”（perelom soznania）。米哈伊尔使用的…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\conclusion.tex",
+      "message": "原文术语「governmentality」在译文中残留 2 次：…需的那类知识、技能与理性称为治理理性或“治理术”（governmentality）（1979；199…；…“企业家治理术”（entrepreneurial governmentality）（Yurchak …"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\conclusion.tex",
+      "message": "原文术语「apparat」在译文中残留 1 次：…的托尼娅相同的术语。另一位书记安德烈起初欢迎机关（apparat，中层党的官僚机构）的危机，他一直认…"
+    },
+    {
+      "code": "A1",
+      "severity": "INFO",
+      "where": "chapters\\conclusion.tex",
+      "message": "原文术语「entrepreneurial governmentality」在译文中残留 1 次：…治理活动。因此，我们可以谈论一种“企业家治理术”（entrepreneurial governmen…"
+    }
+  ],
+  "issue_page": {
+    "total": 143,
+    "offset": 0,
+    "returned": 143,
+    "has_more": false
+  },
+  "ok": true,
+  "exit_code": 0
+}

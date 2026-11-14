@@ -1,0 +1,35 @@
+{
+  "ok": true,
+  "exit_code": 0,
+  "mode": "structural",
+  "project": "D:\\Projects\\翻译\\projects\\everything-was-forever",
+  "structural": {
+    "ok": true,
+    "check": {
+      "error": 0,
+      "warn": 23,
+      "info": 120
+    },
+    "check_ok": true,
+    "global": {
+      "ok": true,
+      "exit_code": 0,
+      "total_chars": 186665,
+      "problem_units": 0,
+      "unit_count": 8,
+      "summarized": true
+    }
+  },
+  "semantic": {
+    "kind": "none",
+    "tasks": 0,
+    "review_chars": 0
+  },
+  "estimate": {
+    "full_review_tokens_rough": 0,
+    "this_run_tokens_rough": 0,
+    "saved_ratio": 0.0,
+    "note": "按字符数 / 2.5 粗估；实际取决于模型、语言与提示长度。"
+  },
+  "saved_mode": false
+}

@@ -235,6 +235,58 @@ def convert_fragment(text: str, labels: dict[str, str], meta: dict) -> str:
     return text
 
 
+def render_tikz(text: str, unit: str, workdir: Path) -> str:
+    """把 tikzpicture 编译为 PNG，替换为 includegraphics，供 Pandoc 使用。"""
+    start_tag = "\\begin{tikzpicture}"
+    end_tag = "\\end{tikzpicture}"
+    index = 0
+    while True:
+        start = text.find(start_tag, index)
+        if start < 0:
+            break
+        end = text.find(end_tag, start)
+        if end < 0:
+            break
+        end += len(end_tag)
+        code = text[start:end]
+        index = end
+        xelatex = shutil.which("xelatex")
+        if not xelatex:
+            continue
+        workdir.mkdir(parents=True, exist_ok=True)
+        name = f"{unit}-tikz-{index}"
+        tex_path = workdir / f"{name}.tex"
+        tex_path.write_text(
+            "\\documentclass[UTF8,fontset=none,border=4pt]{standalone}\n"
+            "\\usepackage{ctex}\n\\setCJKmainfont{SimSun}\n"
+            "\\usepackage{tikz}\n\\usetikzlibrary{positioning}\n"
+            "\\begin{document}\n" + code + "\n\\end{document}\n",
+            encoding="utf-8",
+        )
+        for _ in range(2):
+            subprocess.run([xelatex, "-interaction=nonstopmode", "-halt-on-error",
+                            tex_path.name], cwd=workdir,
+                           capture_output=True)
+        pdf = workdir / f"{name}.pdf"
+        png = workdir / f"{name}.png"
+        if not pdf.exists():
+            continue
+        try:
+            import pymupdf
+            doc = pymupdf.open(str(pdf))
+            pix = doc[0].get_pixmap(dpi=200)
+            pix.save(str(png))
+            doc.close()
+        except Exception:
+            continue
+        if png.exists():
+            rel = f"figures/{name}.png"
+            text = (text[:start]
+                    + f"\\includegraphics[width=0.9\\textwidth]{{{rel}}}"
+                    + text[end:])
+    return text
+
+
 def collect_files(project: Path, include_backmatter: bool) -> list[Path]:
     files: list[Path] = []
     for name in ("frontmatter/preface.tex", "frontmatter/acknowledgments.tex",
@@ -308,11 +360,14 @@ def main() -> int:
         return 1
 
     labels = chapter_labels(project, files)
+    build_dir = project / "build" / "export"
+    build_dir.mkdir(parents=True, exist_ok=True)
     fragments = []
     chapter_no = 0
     for path in files:
-        fragment = convert_fragment(
-            path.read_text(encoding="utf-8-sig", errors="replace"), labels, meta)
+        raw = path.read_text(encoding="utf-8-sig", errors="replace")
+        raw = render_tikz(raw, path.stem, build_dir / "figures")
+        fragment = convert_fragment(raw, labels, meta)
 
         def number(match: re.Match) -> str:
             nonlocal chapter_no
@@ -335,6 +390,7 @@ def main() -> int:
     slug = meta_raw.get("slug", project.name)
     resource = os.pathsep.join([
         str(project), str(project / "figures"), str(project / "source" / "images"),
+        str(build_dir),
     ])
     targets = list(FORMATS) if args.format == "all" else [args.format]
 

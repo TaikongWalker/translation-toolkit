@@ -191,6 +191,7 @@ python scripts/export.py --check            # 检查 Pandoc 是否可用
 
 - 安装 Pandoc：`winget install JohnMacFarlane.Pandoc`
 - 输出到 `dist/<slug>.<ext>`；图片在 EPUB/DOCX 中嵌入，HTML 使用 `--embed-resources`
+- TikZ 图会先用 XeLaTeX 编译为 PNG 再嵌入；需要 `xelatex` 与 PyMuPDF（`pip install pymupdf`）
 - 章节自动编号为“第一章 …”，脚注、译者注、图注、引文保留
 - 版式会简化：复杂表格、索引双栏、精确分页只在 PDF 中保留
 - `--include-backmatter` 可把术语表、参考文献、索引一起导出
