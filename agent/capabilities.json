@@ -1,6 +1,6 @@
 {
   "name": "translation-toolkit",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Agent-facing contract for the translation toolkit. Human docs live in docs/; this file is the machine-readable index.",
   "entrypoints": {
     "status": {
@@ -34,6 +34,17 @@
         "--include-text": "include chunk text in JSON (large)"
       },
       "writes": ["<out>/*.md", "<out>/plan.json"]
+    },
+    "audit": {
+      "command": "python scripts/audit.py <inventory|plan|record|stats|report> --project <project>",
+      "purpose": "Reproducible random sampling QA: paragraph pairs, stratified rounds, Wilson interval, stop recommendation.",
+      "options": {
+        "plan": "--size N --seed S --round R [--unit U] [--with-replacement]",
+        "record": "--id <unit:pNNN> --result ok|omission|mistranslation|terminology|number|footnote|style|other --note TEXT",
+        "stats": "--min-coverage 0.1 --quiet-rounds 3"
+      },
+      "writes": ["notes/audit/segments.json", "notes/audit/sample-log.csv",
+                 "notes/audit/findings.csv", "notes/audit/report.md"]
     },
     "global_check": {
       "command": "python scripts/global_check.py --project <project> --json",
@@ -99,7 +110,8 @@
     ".claude/skills/review-chapter/SKILL.md",
     ".claude/skills/polish-chapter/SKILL.md",
     ".claude/skills/final-check/SKILL.md",
-    ".claude/skills/select-style/SKILL.md"
+    ".claude/skills/select-style/SKILL.md",
+    ".claude/skills/audit-sample/SKILL.md"
   ],
   "guardrails": [
     "Never modify source/.",

@@ -46,7 +46,7 @@ pip install "markitdown>=0.1.9"     # PDF/HTML 首选后端
 - `AGENTS.md`：agent 入口、命令契约、推荐工作循环、硬性规则。
 - `agent/capabilities.json`：机器可读的命令索引、读写文件、JSON schema、退出码。
 - `agent/schemas/`：`status`、`check`、`global_check` 的 JSON Schema。
-- `.claude/skills/`：六个阶段技能，可直接被 Claude Code 调用。
+- `.claude/skills/`：七个阶段技能，可直接被 Claude Code 调用。
 - 所有检查命令支持 `--json`：stdout 只有一份 JSON，日志不混入；退出码 0/1 区分阻断。
 
 一条命令看全书状态：
@@ -72,6 +72,24 @@ python scripts/chunk.py --project . --unit ch03 --out chunks/ch03 --json
 
 - `chunk.py` 只在段落边界切分，不拆句子与脚注；`lossless=true` 表示按 `plan.json` 拼回与原文逐字一致。
 - 降载只减少输出或单次输入，不摘要、不删减原文。
+
+### 随机抽样复核
+
+用于全书难免漏检时，用可复现的随机抽样估计残余错误率。
+
+```powershell
+python scripts/audit.py inventory --project .                 # 建立段落配对清单
+python scripts/audit.py plan --project . --size 20 --seed 42 --round 1 --json
+python scripts/audit.py record --project . --id ch03:p012 --result omission --note "漏了第二句"
+python scripts/audit.py stats --project . --json               # 覆盖率、错误率、95% 区间
+python scripts/audit.py report --project .                     # notes/audit/report.md
+```
+
+- 段落级配对，按单元分层抽样；默认不重复抽同一段，支持多轮。
+- 每段附自动标记：数字缺失、占位、英文残留、术语缺失、译文缺失。
+- `stats` 给出 Wilson 95% 区间与估计残余错误数；最近 N 轮无新增错误且覆盖率达标时才建议停止。
+- 抽样记录与发现写在 `notes/audit/`，固定 `--seed` 可复现。
+- 要独立重复实验而非扩大覆盖，可用 `--with-replacement`。
 
 ## 思维阁：选择译者文风
 
@@ -124,7 +142,7 @@ translation-toolkit/
 ├─ agent/
 │  ├─ capabilities.json      机器可读的命令与输出索引
 │  └─ schemas/               status / check / global_check 的 JSON Schema
-├─ .claude/skills/           阶段技能：立项、初译、审校、润色、终检、选文风
+├─ .claude/skills/           阶段技能：立项、初译、审校、润色、终检、选文风、抽样
 ├─ styles/                   思维阁：译者文风档位
 ├─ docs/                     工作流、翻译规范、质检清单、排版规范
 ├─ scripts/
@@ -133,6 +151,7 @@ translation-toolkit/
 │  ├─ status.py              项目总状态（agent 首选入口）
 │  ├─ style.py               思维阁档位管理
 │  ├─ chunk.py               长章无损分块
+│  ├─ audit.py               随机抽样复核与残余错误估计
 │  ├─ extract.py             统一原文抽取（多格式）
 │  ├─ epub_extract.py        EPUB 抽取后端
 │  ├─ scaffold.py            生成逐章 LaTeX 骨架

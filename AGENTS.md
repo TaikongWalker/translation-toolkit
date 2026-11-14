@@ -33,6 +33,7 @@ python scripts/status.py --project projects/my-book --json
 | `term_candidates.py --project <p> --json` | 提取术语候选 | `candidate_count` `candidates[]` |
 | `style.py --list\|--show\|--apply --json` | 思维阁文风档位 | `profiles[]` / `profile` / `style_id` |
 | `chunk.py --project <p> --unit <u> --out <d> --json` | 把长章切成无损块 | `chunks[]` `source_sha256` `lossless` |
+| `audit.py inventory\|plan\|record\|stats\|report` | 随机抽样复核 | `tasks[]` `coverage` `error_rate_ci95` `stop_recommended` |
 | `extract.py --input <f> --out <p>/source --json` | 多格式原文抽取 | `format` `backend` `files` `units[]` `warnings[]` |
 | `extract.py --list-formats --json` | 后端可用性 | `engines` `formats[]` |
 | `build.ps1 -Project <p> -Json` | 构建 PDF | `ok` `pdf` `pages` `check{ok,error,warn,info}` |
@@ -51,6 +52,22 @@ python scripts/status.py --project projects/my-book --json
 6. **抽取大书**：`extract.py ... --summary` 省略 `units` 明细。
 
 不要用“摘要原文再翻译”的方式降载——那会损失信息。降载只应减少**输出**和**单次输入**，不减少原文。
+
+## 抽样复核
+
+结构检查抓不到语义错误时，用 `audit.py` 做可复现的随机抽样：
+
+```powershell
+python scripts/audit.py inventory --project . --json
+python scripts/audit.py plan --project . --size 20 --seed 42 --round 1 --json
+python scripts/audit.py record --project . --id ch03:p012 --result omission --note "漏了第二句"
+python scripts/audit.py stats --project . --json
+```
+
+- `plan` 默认不重复抽样；多轮推进覆盖率，`--with-replacement` 用于独立重复实验。
+- 每个 task 带 `auto_flags`（数字缺失、占位、英文残留、术语缺失、译文缺失），先处理标记项。
+- `stats` 的 `stop_recommended` 只有在最近 N 轮无新增错误且覆盖率达到阈值时才为真；不要只看错误率为 0。
+- 结果写入 `notes/audit/`，固定 seed 可复现。
 
 ## 原文格式
 
@@ -96,6 +113,7 @@ status → 读取候选与上下文 → 翻译/审校单章 → check → 修复
 - `polish-chapter` — 单语润色（含文风档位）
 - `final-check` — 全书终检与 PDF 核验
 - `select-style` — 思维阁选档与应用
+- `audit-sample` — 随机抽样复核与残余错误估计
 
 ## 硬性规则（不可协商）
 
