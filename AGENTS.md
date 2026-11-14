@@ -36,6 +36,7 @@ python scripts/status.py --project projects/my-book --json
 | `audit.py inventory\|plan\|record\|stats\|report` | 随机抽样复核 | `tasks[]` `coverage` `error_rate_ci95` `stop_recommended` |
 | `sample_size.py --project <p> --json` | 计算所需样本量与轮次 | `required_samples` `additional_samples` `per_round` |
 | `qa.py --project <p> --mode full\|sample\|structural` | 统一质检入口 | `structural` `semantic` `estimate` |
+| `export.py --project <p> --format all` | 导出 EPUB/DOCX/HTML/MD | `results[]` |
 | `extract.py --input <f> --out <p>/source --json` | 多格式原文抽取 | `format` `backend` `files` `units[]` `warnings[]` |
 | `extract.py --list-formats --json` | 后端可用性 | `engines` `formats[]` |
 | `build.ps1 -Project <p> -Json` | 构建 PDF | `ok` `pdf` `pages` `check{ok,error,warn,info}` |
@@ -94,6 +95,18 @@ python scripts/qa.py --project . --mode structural --json
 - `structural`：只跑自动检查，不生成语义复核任务。
 - `--save` 把 `qa_mode` 写入 `project.json`；之后 `qa.py --project .` 沿用。
 - 不要对用户承诺“抽样=完整检查”；抽样只给残余错误率上界。
+
+## 输出格式
+
+PDF 由 `build.ps1` / XeLaTeX 生成；其他格式由 Pandoc 从同一份 LaTeX 稿导出：
+
+```powershell
+python scripts/export.py --project . --format all --json
+```
+
+- 支持 `md`、`html`、`epub`、`docx`；`--check` 检查 Pandoc。
+- 章节自动编号，脚注/译者注/图注保留；版式会比 PDF 简化。
+- 需要精确分页、双栏索引、字体排印时，以 PDF 为准。
 
 ## 原文格式
 

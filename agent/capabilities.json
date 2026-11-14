@@ -1,6 +1,6 @@
 {
   "name": "translation-toolkit",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Agent-facing contract for the translation toolkit. Human docs live in docs/; this file is the machine-readable index.",
   "entrypoints": {
     "status": {
@@ -66,6 +66,13 @@
         "--save": "persist qa_mode in project.json"
       },
       "writes": ["notes/qa/*", "notes/audit/*", "project.json:qa_mode"]
+    },
+    "export": {
+      "command": "python scripts/export.py --project <project> --format all --json",
+      "purpose": "Export the LaTeX book to Markdown, HTML, EPUB and DOCX via Pandoc.",
+      "formats": ["md", "html", "epub", "docx"],
+      "requires": ["pandoc (winget install JohnMacFarlane.Pandoc)"],
+      "note": "PDF remains the XeLaTeX build; other formats simplify layout."
     },
     "global_check": {
       "command": "python scripts/global_check.py --project <project> --json",

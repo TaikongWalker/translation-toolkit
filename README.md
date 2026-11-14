@@ -9,6 +9,7 @@
 - 从常见阅读文本格式抽取章节与清单：EPUB、PDF、TXT、Markdown、HTML、DOCX、ODT、RTF、FB2、MOBI/AZW3
 - 以 `glossary/terms.csv` 为唯一权威，检查术语一致性与禁用译名
 - 一个项目一本书：分章 `.tex`、自动生成目录与术语表、XeLaTeX 编译 PDF
+- 通过 Pandoc 导出 EPUB / DOCX / HTML / Markdown，PDF 仍由 XeLaTeX 生成
 - 自动核对脚注数、图数、节数、TODO 残留、标点与数字
 - 把原文参考文献与索引转换为 LaTeX 并纳入成书
 - 项目模板 + 脚手架，几分钟内开始一本新书
@@ -172,6 +173,25 @@ cd projects\my-book
 
 产物在 `projects/<slug>/dist/<slug>.pdf`。
 
+## 输出格式
+
+PDF 是主格式，由 XeLaTeX 排版；其他格式通过 Pandoc 从同一份 LaTeX 稿导出：
+
+```powershell
+python scripts/export.py --project . --format md
+python scripts/export.py --project . --format html
+python scripts/export.py --project . --format epub
+python scripts/export.py --project . --format docx
+python scripts/export.py --project . --format all
+python scripts/export.py --check            # 检查 Pandoc 是否可用
+```
+
+- 安装 Pandoc：`winget install JohnMacFarlane.Pandoc`
+- 输出到 `dist/<slug>.<ext>`；图片在 EPUB/DOCX 中嵌入，HTML 使用 `--embed-resources`
+- 章节自动编号为“第一章 …”，脚注、译者注、图注、引文保留
+- 版式会简化：复杂表格、索引双栏、精确分页只在 PDF 中保留
+- `--include-backmatter` 可把术语表、参考文献、索引一起导出
+
 ## 目录结构
 
 ```
@@ -193,6 +213,7 @@ translation-toolkit/
 │  ├─ audit.py               随机抽样复核与残余错误估计
 │  ├─ sample_size.py         抽样样本量与统计功效计算
 │  ├─ qa.py                  统一质检入口：全量 / 抽样 / 仅自动检查
+│  ├─ export.py              Pandoc 多格式导出（EPUB/DOCX/HTML/MD）
 │  ├─ extract.py             统一原文抽取（多格式）
 │  ├─ epub_extract.py        EPUB 抽取后端
 │  ├─ scaffold.py            生成逐章 LaTeX 骨架

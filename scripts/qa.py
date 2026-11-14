@@ -86,10 +86,12 @@ def sampled(project: Path, out_dir: Path, margin: float, confidence: float,
             rounds: int, seed: int, refresh: bool,
             with_replacement: bool, size_override: int = 0) -> dict:
     inventory = audit.load_inventory(project, refresh=refresh)
-    total = int(inventory.get("total_segments", 0))
+    all_segments = audit.segment_index(inventory)
+    eligible = [s for s in all_segments.values() if s.get("aligned", True)]
+    total = len(eligible)
     if total <= 0:
         return {"kind": "sample", "total_segments": 0, "tasks": 0,
-                "review_chars": 0, "error": "段落清单为空，先运行 audit.py inventory"}
+                "review_chars": 0, "error": "没有可抽样的对齐段落"}
     required = sample_size.required_zero_errors(margin, confidence, total)
     log_path = project / audit.AUDIT_DIR / "sample-log.csv"
     already = len({r.get("id") for r in audit.read_csv(log_path) if r.get("id")})

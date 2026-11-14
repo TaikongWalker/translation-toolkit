@@ -102,6 +102,10 @@ def split_paragraphs(text: str, min_chars: int = 8) -> list[str]:
             and not re.fullmatch(r"#{1,6}\s+.+", b)]
 
 
+def clip(text: str, max_chars: int) -> str:
+    return text if max_chars <= 0 else text[:max_chars]
+
+
 def auto_flags(source: str, target: str, terms: list[dict]) -> list[str]:
     flags = []
     if not target.strip():
@@ -109,8 +113,11 @@ def auto_flags(source: str, target: str, terms: list[dict]) -> list[str]:
         return flags
     if "（待译）" in target or "\\todo{" in target:
         flags.append("placeholder")
-    src_nums = set(NUMBER.findall(source))
-    tgt_nums = set(NUMBER.findall(target))
+    # 脚注引用会带来数字噪声，先剔除
+    src_clean = re.sub(r"\[\^\d+\]|\\footnote\{[^}]*\}", "", source)
+    tgt_clean = re.sub(r"\[\^\d+\]|〔原注〕|〔译注〕", "", target)
+    src_nums = set(NUMBER.findall(src_clean))
+    tgt_nums = set(NUMBER.findall(tgt_clean))
     if src_nums - tgt_nums:
         flags.append("numbers_missing:" + ",".join(sorted(src_nums - tgt_nums)[:5]))
     if ENGLISH_RUN.search(target):
@@ -126,12 +133,109 @@ def auto_flags(source: str, target: str, terms: list[dict]) -> list[str]:
     return flags
 
 
+PAIR_SECTION = re.compile(r"^=====\s*(.+?)\s*=====\s*$")
+PAIR_SOURCE = re.compile(r"^---\s*源\s*(\d+)\s*---\s*$")
+PAIR_TARGET = re.compile(r"^---\s*译\s*(\d+)\s*---\s*$")
+
+
+def parse_pairs_file(path: Path) -> list[dict]:
+    """解析双语审校生成的 _chNN_pairs.md。
+
+    返回 [{title, pairs: {n: {source, target}}, aligned}]。
+    """
+    sections: list[dict] = []
+    section = {"title": "", "pairs": {}, "aligned": True}
+    number = None
+    kind = None
+    buf: list[str] = []
+
+    def flush() -> None:
+        nonlocal number, kind, buf
+        if number is not None and kind:
+            section["pairs"].setdefault(number, {})[kind] = "\n".join(buf).strip()
+        number, kind, buf = None, None, []
+
+    for line in read_text(path).splitlines():
+        match = PAIR_SECTION.match(line)
+        if match:
+            flush()
+            if section["pairs"]:
+                sections.append(section)
+            section = {"title": match.group(1).strip(), "pairs": {}, "aligned": True}
+            continue
+        match = PAIR_SOURCE.match(line)
+        if match:
+            flush()
+            number, kind = int(match.group(1)), "source"
+            continue
+        match = PAIR_TARGET.match(line)
+        if match:
+            flush()
+            number, kind = int(match.group(1)), "target"
+            continue
+        if kind:
+            buf.append(line)
+    flush()
+    if section["pairs"]:
+        sections.append(section)
+
+    for item in sections:
+        sources = {n for n, pair in item["pairs"].items() if pair.get("source")}
+        targets = {n for n, pair in item["pairs"].items() if pair.get("target")}
+        item["aligned"] = sources == targets and bool(sources)
+    return sections
+
+
+def build_inventory_from_pairs(project: Path, stem: str, pairs_path: Path,
+                               terms: list[dict], max_chars: int) -> dict:
+    sections = parse_pairs_file(pairs_path)
+    segments = []
+    seq = 0
+    for section in sections:
+        for n in sorted(section["pairs"]):
+            pair = section["pairs"][n]
+            source = pair.get("source", "")
+            target = pair.get("target", "")
+            if not source and not target:
+                continue
+            seq += 1
+            segments.append({
+                "id": f"{stem}:p{seq:03d}",
+                "unit": stem,
+                "index": seq,
+                "section": section["title"],
+                "source": clip(source, max_chars),
+                "target": clip(target, max_chars),
+                "source_chars": len(source),
+                "target_chars": len(target),
+                "aligned": section["aligned"],
+                "auto_flags": auto_flags(source, target, terms),
+            })
+    return {
+        "unit": stem,
+        "source_paragraphs": sum(1 for s in sections for p in s["pairs"].values()
+                                 if p.get("source")),
+        "target_paragraphs": sum(1 for s in sections for p in s["pairs"].values()
+                                 if p.get("target")),
+        "aligned": all(s["aligned"] for s in sections) if sections else False,
+        "source": "pairs",
+        "segments": segments,
+    }
+
+
 def build_inventory(project: Path, max_chars: int) -> dict:
     terms = load_terms(project / "glossary" / "terms.csv")
     units = []
     total = 0
     for stem, src_path, tex_path in chapter_pairs(project):
         if src_path is None or tex_path is None:
+            continue
+        pairs_file = project / "notes" / f"_{stem}_pairs.md"
+        if pairs_file.exists():
+            unit = build_inventory_from_pairs(project, stem, pairs_file,
+                                              terms, max_chars)
+            total += len(unit["segments"])
+            units.append(unit)
             continue
         source_paras = split_paragraphs(read_text(src_path))
         target_paras = split_paragraphs(strip_latex(read_text(tex_path)))
@@ -143,8 +247,8 @@ def build_inventory(project: Path, max_chars: int) -> dict:
                 "id": f"{stem}:p{idx + 1:03d}",
                 "unit": stem,
                 "index": idx + 1,
-                "source": source[:max_chars],
-                "target": target[:max_chars],
+                "source": clip(source, max_chars),
+                "target": clip(target, max_chars),
                 "source_chars": len(source),
                 "target_chars": len(target),
                 "aligned": aligned,
@@ -167,7 +271,7 @@ def build_inventory(project: Path, max_chars: int) -> dict:
 
 
 def load_inventory(project: Path, refresh: bool = False,
-                   max_chars: int = 1200) -> dict:
+                   max_chars: int = 0) -> dict:
     path = audit_dir(project) / "segments.json"
     if refresh or not path.exists():
         inventory = build_inventory(project, max_chars)
@@ -210,7 +314,8 @@ def allocate(pools: dict[str, list[dict]], size: int) -> dict[str, int]:
 
 def plan_round(project: Path, size: int, seed: int, round_no: int,
                unit_filter: str = "", with_replacement: bool = False,
-               refresh: bool = False, max_chars: int = 1200) -> dict:
+               refresh: bool = False, max_chars: int = 0,
+               aligned_only: bool = True) -> dict:
     inventory = load_inventory(project, refresh=refresh, max_chars=max_chars)
     segments = segment_index(inventory)
     log_path = audit_dir(project) / "sample-log.csv"
@@ -221,9 +326,13 @@ def plan_round(project: Path, size: int, seed: int, round_no: int,
         if unit_filter and unit["unit"] != unit_filter:
             continue
         pool = [s for s in unit["segments"]
-                if with_replacement or s["id"] not in sampled_before]
+                if (not aligned_only or s.get("aligned", True))
+                and (with_replacement or s["id"] not in sampled_before)]
         if pool:
             pools[unit["unit"]] = pool
+
+    eligible = sum(1 for s in segments.values()
+                   if not aligned_only or s.get("aligned", True))
 
     available = sum(len(pool) for pool in pools.values())
     if available == 0:
@@ -266,11 +375,12 @@ def plan_round(project: Path, size: int, seed: int, round_no: int,
         "with_replacement": with_replacement,
         "coverage": {
             "total_segments": len(segments),
+            "eligible_segments": eligible,
             "sampled_unique": len(sampled_before) + len({t['id'] for t in tasks
                                                          if t['id'] not in sampled_before}),
             "ratio": round((len(sampled_before)
                             + len({t['id'] for t in tasks if t['id'] not in sampled_before}))
-                           / max(1, len(segments)), 4),
+                           / max(1, eligible), 4),
         },
         "tasks": tasks,
     }
@@ -316,6 +426,7 @@ def compute_stats(project: Path, min_coverage: float, quiet_rounds: int) -> dict
         units.append({
             "unit": unit["unit"],
             "segments": len(unit_ids),
+            "eligible": sum(1 for s in unit["segments"] if s.get("aligned", True)),
             "sampled": len(sampled),
             "reviewed": len(reviewed),
             "errors": len(errors),
@@ -328,7 +439,8 @@ def compute_stats(project: Path, min_coverage: float, quiet_rounds: int) -> dict
     error_ids = [i for i in reviewed_ids if latest[i]["result"] != "ok"]
     n, k = len(reviewed_ids), len(error_ids)
     ci = wilson(k, n)
-    total = len(segments)
+    total_all = len(segments)
+    total = sum(1 for s in segments.values() if s.get("aligned", True))
 
     rounds = sorted({int(r["round"]) for r in log if r.get("round", "").isdigit()})
     by_round = []
@@ -372,6 +484,7 @@ def compute_stats(project: Path, min_coverage: float, quiet_rounds: int) -> dict
         "ok": True,
         "exit_code": 0,
         "total_segments": total,
+        "total_segments_all": total_all,
         "sampled": len({r["id"] for r in log}),
         "reviewed": n,
         "reviewers": reviewers,
@@ -416,11 +529,11 @@ def markdown_report(stats: dict) -> str:
                      f"{row['errors_found']} | {row.get('error_rate', 0):.1%} | "
                      f"{row['new_errors']} |")
     lines += ["", "## 分单元", "",
-              "| 单元 | 段落 | 抽样 | 复核 | 错误 | 对齐 |",
-              "|---|---:|---:|---:|---:|---|"]
+              "| 单元 | 段落 | 可抽 | 抽样 | 复核 | 错误 | 对齐 |",
+              "|---|---:|---:|---:|---:|---:|---|"]
     for row in stats["units"]:
-        lines.append(f"| {row['unit']} | {row['segments']} | {row['sampled']} | "
-                     f"{row['reviewed']} | {row['errors']} | "
+        lines.append(f"| {row['unit']} | {row['segments']} | {row.get('eligible', row['segments'])} | "
+                     f"{row['sampled']} | {row['reviewed']} | {row['errors']} | "
                      f"{'是' if row['aligned'] else '否'} |")
     lines += ["", "## 结论", "", stats["stop_reason"], ""]
     return "\n".join(lines)
@@ -439,7 +552,7 @@ def main() -> int:
     inv = sub.add_parser("inventory", help="重建段落配对清单")
     inv.add_argument("--project", default=".")
     inv.add_argument("--refresh", action="store_true")
-    inv.add_argument("--max-chars", type=int, default=1200)
+    inv.add_argument("--max-chars", type=int, default=0)
     inv.add_argument("--json", action="store_true")
 
     plan = sub.add_parser("plan", help="生成一轮抽样")
@@ -450,7 +563,9 @@ def main() -> int:
     plan.add_argument("--unit", default="")
     plan.add_argument("--with-replacement", action="store_true")
     plan.add_argument("--refresh", action="store_true")
-    plan.add_argument("--max-chars", type=int, default=1200)
+    plan.add_argument("--max-chars", type=int, default=0)
+    plan.add_argument("--include-unaligned", action="store_true",
+                      help="连段落数不匹配的段落一起抽样（默认跳过）")
     plan.add_argument("--json", action="store_true")
 
     rec = sub.add_parser("record", help="记录一条复核结果")
@@ -500,7 +615,8 @@ def main() -> int:
     if args.command == "plan":
         result = plan_round(project, args.size, args.seed, args.round,
                             args.unit, args.with_replacement, args.refresh,
-                            args.max_chars)
+                            args.max_chars,
+                            aligned_only=not args.include_unaligned)
         if args.json:
             print(json.dumps(result, ensure_ascii=False, indent=2))
         elif result["ok"]:
