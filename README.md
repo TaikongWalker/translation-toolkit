@@ -46,7 +46,7 @@ pip install "markitdown>=0.1.9"     # PDF/HTML 首选后端
 - `AGENTS.md`：agent 入口、命令契约、推荐工作循环、硬性规则。
 - `agent/capabilities.json`：机器可读的命令索引、读写文件、JSON schema、退出码。
 - `agent/schemas/`：`status`、`check`、`global_check` 的 JSON Schema。
-- `.claude/skills/`：八个阶段技能，可直接被 Claude Code 调用。
+- `.claude/skills/`：九个阶段技能，可直接被 Claude Code 调用。
 - 所有检查命令支持 `--json`：stdout 只有一份 JSON，日志不混入；退出码 0/1 区分阻断。
 
 一条命令看全书状态：
@@ -114,6 +114,22 @@ python scripts/sample_size.py --table
 - 已复核若干段时，用 `--reviewed N --observed K` 计算当前上界与还差多少段。
 - 这给出的是**错误率上界**，不是“绝对无遗漏”的证明；前提是随机抽样、独立复核、能发现被抽段落的错误。
 
+### 选全量还是抽样
+
+两种模式都先做**全量自动结构检查**（术语、标点、脚注/图数量、数字、TODO），区别只在语义复核的覆盖：
+
+```powershell
+python scripts/qa.py --project . --mode full       # 全书每段都生成复核任务
+python scripts/qa.py --project . --mode sample      # 按样本量抽样
+python scripts/qa.py --project . --mode structural  # 只做自动检查
+python scripts/qa.py --project . --mode sample --save   # 记住选择
+```
+
+- `full`：任务写入 `notes/qa/full-plan.json`，不直接刷屏
+- `sample`：自动读取 `sample_size.py` 的样本量，分轮写入 `notes/audit/round-*.json`
+- 输出带粗略 token 估算：本次复核 vs 全书复核，以及节省比例
+- `--save` 把 `qa_mode` 写进 `project.json`，之后直接 `qa.py --project .` 即沿用
+
 ## 思维阁：选择译者文风
 
 ```powershell
@@ -165,7 +181,7 @@ translation-toolkit/
 ├─ agent/
 │  ├─ capabilities.json      机器可读的命令与输出索引
 │  └─ schemas/               status / check / global_check 的 JSON Schema
-├─ .claude/skills/           阶段技能：立项、初译、审校、润色、终检、选文风、抽样、样本量
+├─ .claude/skills/           阶段技能：立项、初译、审校、润色、终检、选文风、抽样、样本量、质检模式
 ├─ styles/                   思维阁：译者文风档位
 ├─ docs/                     工作流、翻译规范、质检清单、排版规范
 ├─ scripts/
@@ -176,6 +192,7 @@ translation-toolkit/
 │  ├─ chunk.py               长章无损分块
 │  ├─ audit.py               随机抽样复核与残余错误估计
 │  ├─ sample_size.py         抽样样本量与统计功效计算
+│  ├─ qa.py                  统一质检入口：全量 / 抽样 / 仅自动检查
 │  ├─ extract.py             统一原文抽取（多格式）
 │  ├─ epub_extract.py        EPUB 抽取后端
 │  ├─ scaffold.py            生成逐章 LaTeX 骨架

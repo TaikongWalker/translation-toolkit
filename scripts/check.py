@@ -133,7 +133,8 @@ def chapter_pairs(project: Path) -> list[tuple[str, Path, Path | None]]:
 class Checker:
     def __init__(self, project: Path, summary: bool, max_details: int,
                  json_mode: bool = False, compact: bool = False,
-                 issue_offset: int = 0, issue_limit: int = 0):
+                 issue_offset: int = 0, issue_limit: int = 0,
+                 omit_issues: bool = False):
         self.project = project
         self.summary = summary
         self.max_details = max_details
@@ -141,6 +142,7 @@ class Checker:
         self.compact = compact
         self.issue_offset = issue_offset
         self.issue_limit = issue_limit
+        self.omit_issues = omit_issues
         self.issues: list[tuple[str, str, str, str]] = []  # code, severity, where, message
         self.counts = {code: 0 for code in SEVERITY}
         self.meta: dict = {}
@@ -287,6 +289,8 @@ class Checker:
             start = max(0, self.issue_offset)
             end = start + self.issue_limit if self.issue_limit else total
             selected = self.issues[start:end]
+            if self.omit_issues:
+                selected = []
             if self.compact:
                 selected = [
                     (code, severity, where, message[:160])
@@ -363,6 +367,8 @@ def main() -> int:
                         help="JSON 模式 issues 的起始偏移")
     parser.add_argument("--compact", action="store_true",
                         help="JSON 模式截断每条 message 到 160 字，降低输出体积")
+    parser.add_argument("--omit-issues", action="store_true",
+                        help="JSON 模式只返回计数，不返回 issues 明细")
     args = parser.parse_args()
 
     project = Path(args.project).resolve()
@@ -393,7 +399,8 @@ def main() -> int:
 
     checker = Checker(project, args.summary, args.max_details,
                       json_mode=args.json, compact=args.compact,
-                      issue_offset=args.offset, issue_limit=args.max_issues)
+                      issue_offset=args.offset, issue_limit=args.max_issues,
+                      omit_issues=args.omit_issues)
     checker.meta = meta
     terms = load_terms(project / "glossary" / "terms.csv")
     checker.term_count = len(terms)

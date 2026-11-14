@@ -35,6 +35,7 @@ python scripts/status.py --project projects/my-book --json
 | `chunk.py --project <p> --unit <u> --out <d> --json` | 把长章切成无损块 | `chunks[]` `source_sha256` `lossless` |
 | `audit.py inventory\|plan\|record\|stats\|report` | 随机抽样复核 | `tasks[]` `coverage` `error_rate_ci95` `stop_recommended` |
 | `sample_size.py --project <p> --json` | 计算所需样本量与轮次 | `required_samples` `additional_samples` `per_round` |
+| `qa.py --project <p> --mode full\|sample\|structural` | 统一质检入口 | `structural` `semantic` `estimate` |
 | `extract.py --input <f> --out <p>/source --json` | 多格式原文抽取 | `format` `backend` `files` `units[]` `warnings[]` |
 | `extract.py --list-formats --json` | 后端可用性 | `engines` `formats[]` |
 | `build.ps1 -Project <p> -Json` | 构建 PDF | `ok` `pdf` `pages` `check{ok,error,warn,info}` |
@@ -77,6 +78,22 @@ python scripts/sample_size.py --project . --margin 0.01 --confidence 0.95 --json
 ```
 
 给出 `required_samples`、`additional_samples` 与 `per_round`。它的结论是**错误率上界**，不是绝对无遗漏；不要向用户表述成“已证明零错误”。
+
+## 全量还是抽样
+
+统一入口 `qa.py`，两种模式都先跑全量自动结构检查：
+
+```powershell
+python scripts/qa.py --project . --mode full --json
+python scripts/qa.py --project . --mode sample --margin 0.01 --confidence 0.95 --json
+python scripts/qa.py --project . --mode structural --json
+```
+
+- `full`：为全书每段生成复核任务，写到 `notes/qa/full-plan.json`；适合高价值书稿或终版。
+- `sample`：按样本量分轮抽样，写到 `notes/audit/round-*.json`；适合长书、迭代期或 token 预算有限。
+- `structural`：只跑自动检查，不生成语义复核任务。
+- `--save` 把 `qa_mode` 写入 `project.json`；之后 `qa.py --project .` 沿用。
+- 不要对用户承诺“抽样=完整检查”；抽样只给残余错误率上界。
 
 ## 原文格式
 
@@ -124,6 +141,7 @@ status → 读取候选与上下文 → 翻译/审校单章 → check → 修复
 - `select-style` — 思维阁选档与应用
 - `audit-sample` — 随机抽样复核与残余错误估计
 - `sample-size` — 所需样本量与轮次计算
+- `qa-mode` — 在全量检查与抽样检查之间选择
 
 ## 硬性规则（不可协商）
 

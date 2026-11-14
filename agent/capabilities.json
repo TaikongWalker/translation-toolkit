@@ -1,6 +1,6 @@
 {
   "name": "translation-toolkit",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Agent-facing contract for the translation toolkit. Human docs live in docs/; this file is the machine-readable index.",
   "entrypoints": {
     "status": {
@@ -55,6 +55,17 @@
         "--table": "common margin/confidence table"
       },
       "note": "Returns an upper bound on residual error rate, not proof of zero defects."
+    },
+    "qa": {
+      "command": "python scripts/qa.py --project <project> --mode full|sample|structural",
+      "purpose": "Unified QA entry: full semantic review plan, sampled review plan, or structural checks only.",
+      "options": {
+        "--mode full": "generate review tasks for every segment",
+        "--mode sample": "compute sample size and create rounds",
+        "--mode structural": "automated checks only",
+        "--save": "persist qa_mode in project.json"
+      },
+      "writes": ["notes/qa/*", "notes/audit/*", "project.json:qa_mode"]
     },
     "global_check": {
       "command": "python scripts/global_check.py --project <project> --json",
@@ -122,7 +133,8 @@
     ".claude/skills/final-check/SKILL.md",
     ".claude/skills/select-style/SKILL.md",
     ".claude/skills/audit-sample/SKILL.md",
-    ".claude/skills/sample-size/SKILL.md"
+    ".claude/skills/sample-size/SKILL.md",
+    ".claude/skills/qa-mode/SKILL.md"
   ],
   "guardrails": [
     "Never modify source/.",
