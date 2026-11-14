@@ -63,6 +63,7 @@ python scripts/status.py --project projects/my-book --json
 ```powershell
 python scripts/audit.py inventory --project . --json
 python scripts/audit.py verify --project . --json
+python scripts/audit.py recheck --project . --json
 python scripts/audit.py plan --project . --size 20 --seed 42 --round 1 --json
 python scripts/audit.py record --project . --id ch03:p012 --result omission --note "漏了第二句"
 python scripts/audit.py stats --project . --json

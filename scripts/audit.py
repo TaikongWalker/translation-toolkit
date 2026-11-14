@@ -277,16 +277,39 @@ def best_block(target_norm: str, blocks: list[tuple[str, str]]) -> tuple[str, fl
     return best_text, best_score
 
 
+def chapter_sections(tex_path: Path) -> list[dict]:
+    """按 \\section 拆分当前正文，返回每节的段落块（保持原顺序）。"""
+    text = strip_footnotes(read_text(tex_path))
+    parts = re.split(r"(?=\\section\*?\{)", text)
+    sections = []
+    for part in parts:
+        match = re.match(r"\\section\*?\{([^{}]*)\}", part)
+        if not match:
+            continue
+        body = strip_latex(part[match.end():])
+        blocks = [b.strip() for b in re.split(r"\n\s*\n", body) if b.strip()]
+        sections.append({"title": match.group(1), "blocks": blocks})
+    return sections
+
+
 def build_inventory_from_pairs(project: Path, stem: str, pairs_path: Path,
                                terms: list[dict], max_chars: int,
                                current_norm: str = "",
-                               current_blocks: list[tuple[str, str]] | None = None) -> dict:
+                               current_blocks: list[tuple[str, str]] | None = None,
+                               current_sections: list[dict] | None = None) -> dict:
     current_blocks = current_blocks or []
+    current_sections = current_sections or []
     sections = parse_pairs_file(pairs_path)
     segments = []
     seq = 0
-    for section in sections:
-        for n in sorted(section["pairs"]):
+    for section_index, section in enumerate(sections):
+        chapter_section = (current_sections[section_index]
+                           if section_index < len(current_sections) else None)
+        direct_blocks = None
+        if (section["aligned"] and chapter_section
+                and len(chapter_section["blocks"]) == len(section["pairs"])):
+            direct_blocks = chapter_section["blocks"]
+        for position, n in enumerate(sorted(section["pairs"])):
             pair = section["pairs"][n]
             source = pair.get("source", "")
             target = pair.get("target", "")
@@ -297,13 +320,19 @@ def build_inventory_from_pairs(project: Path, stem: str, pairs_path: Path,
             refreshed = False
             match_score = 0.0
             stale = False
-            if current_norm and target_norm:
+            if direct_blocks is not None:
+                candidate = direct_blocks[position]
+                if candidate != target:
+                    target = candidate
+                    refreshed = True
+                match_score = 1.0
+            elif current_norm and target_norm:
                 if target_norm in current_norm:
                     match_score = 1.0
                 else:
                     candidate, score = best_block(target_norm, current_blocks)
                     match_score = round(score, 4)
-                    if score >= 0.5:
+                    if score >= 0.8:
                         target = candidate
                         refreshed = True
                     else:
@@ -349,7 +378,8 @@ def build_inventory(project: Path, max_chars: int) -> dict:
             unit = build_inventory_from_pairs(
                 project, stem, pairs_file, terms, max_chars,
                 current_norm=chapter_norm(tex_path),
-                current_blocks=chapter_blocks(tex_path))
+                current_blocks=chapter_blocks(tex_path),
+                current_sections=chapter_sections(tex_path))
             total += len(unit["segments"])
             units.append(unit)
             continue
@@ -532,8 +562,11 @@ def compute_stats(project: Path, min_coverage: float, quiet_rounds: int) -> dict
     latest: dict[str, dict] = {}
     for row in findings:
         prev = latest.get(row["id"])
-        if prev is None or prev.get("result") == "ok" or row.get("result") != "ok":
-            latest[row["id"]] = row  # 错误优先保留，不被后来的 ok 覆盖
+        if (prev is None
+                or (row.get("reviewer") or "") == "recheck"
+                or prev.get("result") == "ok"
+                or row.get("result") != "ok"):
+            latest[row["id"]] = row  # 错误优先；recheck 结果可覆盖旧结论
     logged_ids = {row["id"] for row in log}
     reviewers = sorted({row.get("reviewer") or "default" for row in findings})
 
@@ -559,7 +592,9 @@ def compute_stats(project: Path, min_coverage: float, quiet_rounds: int) -> dict
             "target_paragraphs": unit["target_paragraphs"],
         })
 
-    reviewed_ids = [i for i in latest if not segments[i].get("target_stale")]
+    reviewed_ids = [i for i in latest
+                    if segments[i].get("aligned", True)
+                    and not segments[i].get("target_stale")]
     error_ids = [i for i in reviewed_ids if latest[i]["result"] != "ok"]
     n, k = len(reviewed_ids), len(error_ids)
     ci = wilson(k, n)
@@ -686,6 +721,11 @@ def main() -> int:
                         help="存在 stale 时返回退出码 1")
     verify.add_argument("--json", action="store_true")
 
+    recheck = sub.add_parser("recheck", help="列出按正文刷新过的段落，供重新复核")
+    recheck.add_argument("--project", default=".")
+    recheck.add_argument("--out", default="")
+    recheck.add_argument("--json", action="store_true")
+
     plan = sub.add_parser("plan", help="生成一轮抽样")
     plan.add_argument("--project", default=".")
     plan.add_argument("--size", type=int, default=20)
@@ -774,6 +814,22 @@ def main() -> int:
             if len(stale) > 20:
                 print(f"  … 其余 {len(stale) - 20} 段")
         return result["exit_code"]
+
+    if args.command == "recheck":
+        inventory = load_inventory(project, refresh=True)
+        tasks = [seg for unit in inventory.get("units", [])
+                 for seg in unit.get("segments", [])
+                 if seg.get("target_refreshed")]
+        out = Path(args.out).resolve() if args.out else audit_dir(project) / "recheck-refreshed.json"
+        write_json(out, {"mode": "refreshed", "total": len(tasks), "tasks": tasks})
+        result = {"ok": True, "exit_code": 0, "refreshed": len(tasks),
+                  "plan_file": str(out)}
+        if args.json:
+            print(json.dumps(result, ensure_ascii=False, indent=2))
+        else:
+            print(f"按正文刷新过的段落：{len(tasks)} 段")
+            print(f"复核计划：{out}")
+        return 0
 
     if args.command == "plan":
         result = plan_round(project, args.size, args.seed, args.round,

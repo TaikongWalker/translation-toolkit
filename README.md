@@ -81,6 +81,7 @@ python scripts/chunk.py --project . --unit ch03 --out chunks/ch03 --json
 ```powershell
 python scripts/audit.py inventory --project .                 # 建立段落配对清单
 python scripts/audit.py verify --project . --json             # 校验对照文件是否过时
+python scripts/audit.py recheck --project . --json            # 列出按正文刷新过的段落
 python scripts/audit.py plan --project . --size 20 --seed 42 --round 1 --json
 python scripts/audit.py record --project . --id ch03:p012 --result omission --note "漏了第二句"
 python scripts/audit.py stats --project . --json               # 覆盖率、错误率、95% 区间

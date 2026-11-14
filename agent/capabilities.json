@@ -1,6 +1,6 @@
 {
   "name": "translation-toolkit",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "Agent-facing contract for the translation toolkit. Human docs live in docs/; this file is the machine-readable index.",
   "entrypoints": {
     "status": {
@@ -48,6 +48,7 @@
       "purpose": "Reproducible random sampling QA: paragraph pairs, stratified rounds, Wilson interval, stop recommendation.",
       "options": {
         "verify": "check _pairs.md against current chapters; refresh near matches, mark stale",
+        "recheck": "list segments whose target was refreshed from current chapters",
         "plan": "--size N --seed S --round R [--unit U] [--with-replacement]",
         "record": "--id <unit:pNNN> --result ok|omission|mistranslation|terminology|number|footnote|style|other --note TEXT",
         "stats": "--min-coverage 0.1 --quiet-rounds 3"
